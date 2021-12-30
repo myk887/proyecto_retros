@@ -101,16 +101,85 @@ app.post('/users/login', loginValidatorMiddleware, async (req, res) => {
 })
 
 
-app.put('/users/:idUser')
+app.put('/users/:idUser', async (req, res) => {
+    const user = req.body
+    const newUser = await usersRepository.editUser(user)
 
-app.put('/users/:idUser/password')
+    if (!user || !newUser) {
+      res.status(400)
+      res.end('You should provide a valid user to save')
+    } else {
+      res.status(200)
+      res.send(newUser)
+    }
+  })
 
-app.put('/users/reset-password')
+app.patch('/users/change/password',async (req, res) => {
+    const {password} = req.body
+    const userId = Number(req.headers.authorization.id)
 
-app.delete('/users/:idUser')
+    try {
+        await passwodShema.validateAsync(user)
+    } catch (error) {
+         res.status(404)
+         res.end(error.message)
+         return
+    }
+
+    if (!userId) {
+      res.status(404)
+      res.end('User not found/ token not correct')
+      return
+    }
+
+    let newUser
+    try {
+         newUser = await usersRepository.editPath({password})
+    } catch (error) {
+        res.status(404)
+        res.end(error.message)
+        return
+    }
+
+    if (newUser) {
+      res.status(404)
+      res.end('user not found')
+    }
+
+    res.status(200)
+    res.end('Cambios relizados')
+  })
+
+app.put('/users/reset-password') // hacer con envio de email
+
+
+app.delete('/users/proflie', async (req, res) => {
+    const userId = Number(req.headers.authorization.id)
+    let userDelete
+
+    try {
+        userDelete = await usersRepository.removeUser(userId)
+    } catch (error) {
+        res.status(404)
+        res.end(error.message)
+        return
+    }
+
+    if (!userId) {
+      res.status(404)
+      res.end('User not found')
+    }
+    if (!userDelete) {
+      res.status(404)
+      res.end('User not exits')
+    }
+
+    res.status(200)
+    res.end('user deleted')
+  })
 
 app.get('/users/profile', async (req, res) => {
-    const user = await usersRepository.getUserById(req.headers.params) //JWT
+    const user = await usersRepository.getUserById(req.headers.authorization) //JWT
     if (!user) {
         res.status(404)
         res.end('Users not found')
@@ -121,64 +190,64 @@ app.get('/users/profile', async (req, res) => {
 })
 
 
-app.get('/articulos', async (req, res) => {
+app.get('/articles', async (req, res) => {
     const {categoria, search, order, direction} = req.query
-    let travels
+    let articles
     try {
-        travels = await travelsRepository.getTravels({categoria, search, order, direction})
+        articles = await articlesRepository.getArticles({categoria, search, order, direction})
     } catch (error) {
     res.status(500)
     res.end(error.message)
     return
     }
-    if (!travels.length) {
+    if (!articles.length) {
         res.status(404)
         res.end('Entris not found')
         return
     }
     res.status(200)
-    res.send(travels)
+    res.send(articles)
 })
 
 
-app.put('/articulos/:idEntry', async (req, res) => {
+app.put('/articles/:idEntry', async (req, res) => {
     const entryId = req.params.idEntry
-    const travel = req.body
-    let travel
+    const article = req.body
+    let article
     try {
-        travel = await travelsRepository.putTravelsById(entryId, travel)
+        article = await articlesRepository.putArticlesById(entryId, article)
     } catch (error) {
         res.status(500)
         res.end(error.message)
         return
     }
-    if (!travel.length) {
+    if (!article.length) {
         res.status(404)
         res.end('Entris not found')
         return
     }
     res.status(200)
-    res.send(travel)
+    res.send(article)
 })
 
-app.post('/articulos', async (req, res) => {
-    const travel = req.body
+app.post('/articles', async (req, res) => {
+    const article = req.body
     try {
-       await entryShema.validateAsync(travel)
+       await entryShema.validateAsync(article)
     } catch (error) {
         res.status(404)
         res.end(error.message)
         return
     }
-    let newTravel
+    let newArticle
     try {
-        newTravel = await travelsRepository.postTravel(travel)
+        newArticle = await articleRepository.postArticle(article)
     } catch (error) {
         res.status(500)
         res.end(error.message)
         return
     }
-    if (!newTravel || !travel) {
+    if (!newArticle || !article) {
         res.status(404)
         res.end('Entris not found')
         return
@@ -188,15 +257,101 @@ app.post('/articulos', async (req, res) => {
 })
 
 
-app.delete('/articulo/:idArticulo')
+app.delete('/article/:idarticle', async (req, res) => {
+    const userId = Number(req.headers.authorization.id)
+    let articleDelete
 
-app.post('/users/:idUserVotado/votes')
+    try {
+        userDelete = await articleRepository.removeArticle(userId)
+    } catch (error) {
+        res.status(404)
+        res.end(error.message)
+        return
+    }
 
-app.get('/articulos/enVenta`')
+    if (!userId) {
+      res.status(404)
+      res.end('User not found')
+      return
+    }
+    if (!articleDelete) {
+      res.status(404)
+      res.end('User not exits')
+      return
+    }
 
-app.get('/articulos/comprados')
+    res.status(200)
+    res.end('article deleted')
+  })
 
-app.get('/articulos/vendidos')
+app.post('/users/:idUserVotado/votes', async (req, res) => {
+    const {idVendedor, voto} = req.body
+
+    if (!idVendedor || !voto) {
+        res.status(400)
+        res.end('body incomplete')
+        return
+      }
+
+    let newVoto
+    try {
+        newVoto = await usersRepository.postVoto({voto, idVendedor})
+    } catch (error) {
+        res.status(501)
+        res.end(error.message)
+        return
+    }
+    if (!newVoto) {
+        res.status(404)
+        res.end('voto not add') // ???????????????????????
+        return
+      }
+
+      res.status(200)
+      res.end('article deleted')
+})
+
+app.get('/articles/enVenta',  async (req, res) => {
+    const userId = Number(req.headers.authorization.id)
+
+  const users = await usersRepository.getArticleEnVenta({ userId})
+
+  if (!article) {
+    res.status(404)
+    res.end('Users not found')
+    return
+  }
+  res.status(200)
+  res.send(article)
+})
+
+app.get('/articles/comprados',  async (req, res) => {
+    const userId = Number(req.headers.authorization.id)
+
+  const users = await usersRepository.getArticlesComprados({ userId })
+
+  if (!users) {
+    res.status(404)
+    res.end('Users not found')
+    return
+  }
+  res.status(200)
+  res.send(users)
+})
+
+app.get('/articles/vendidos',  async (req, res) => {
+    const userId = Number(req.headers.authorization.id)
+
+  const users = await usersRepository.getArticlesVendidos({ userId})
+
+  if (!users) {
+    res.status(404)
+    res.end('Users not found')
+    return
+  }
+  res.status(200)
+  res.send(users)
+})
 
 app.listen(PORT, () => {
     console.log(`El servidor esta funcionando en ${BASE_URL}:${PORT}`)
