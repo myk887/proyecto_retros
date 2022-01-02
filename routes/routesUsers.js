@@ -7,6 +7,7 @@ const passwordShema = require('./../shemas/passwordShema')
 const comprobadorToken = require('./../helpers/comprobadorToken')
 const cryptoPassword = require('./../helpers/cryptoPassword')
 const generateRegistrationCode = require('./../helpers/generateRegistrationCode')
+const { accountConfirmationEmail, accountRecoverCodeEmail } = require('./../notificationEmail/emailSender')
 
 
 
@@ -40,7 +41,7 @@ router.post('/',  async (req, res) => {
         return
     }
 
-    accountConfirmationEmail({ sendTo: newUser.email, code: codeRegistration})
+    accountRecoverCodeEmail({ sendTo: newUser.email, code: codeRegistration})
 
     res.status(200)
     res.send(newUser)
@@ -112,24 +113,30 @@ router.post('/login', async (req, res) => {
 })
 
 
-router.put('/:idUser',comprobadorToken, async (req, res) => {
-    const infoUser = req.user
-    const user = req.body
-    const newUser = await usersRepository.editUser(user)
+router.put('/editUser',comprobadorToken, async (req, res) => {
+    try {
+        const infoUser = req.user
+        const user = req.body
+        const newUser = await usersRepository.editUser({user, id: infoUser.id})
 
-    if (!user || !newUser) {
-        res.status(400)
-        res.end('You should provide a valid user to save')
-    } else {
-        res.status(200)
-        res.send(newUser)
+        if (!user || !newUser) {
+            res.status(400)
+            res.end('Any change not executed')
+        } else {
+            res.status(200)
+            res.send(newUser)
+        }
+    } catch (error) {
+        res.status(501)
+        res.end(error.message)
+        return
     }
-    })
+})
 
 router.patch('/change/password',comprobadorToken, async (req, res) => {
-    const {password} = req.body
+    const {passwordActually, passwordNew} = req.body
     const infoUser = req.user
-    const userId = Number(infoUser.id.id)
+    const userId = Number(infoUser.id)
 
     try {
         await passwordShema.validateAsync(user)
@@ -147,7 +154,7 @@ router.patch('/change/password',comprobadorToken, async (req, res) => {
 
     let newUser
     try {
-            newUser = await usersRepository.editPath({password})
+            newUser = await usersRepository.editPath ({id: userId, passwordActually, passwordNew })
     } catch (error) {
         res.status(404)
         res.end(error.message)
@@ -155,15 +162,58 @@ router.patch('/change/password',comprobadorToken, async (req, res) => {
     }
 
     if (newUser) {
-        res.status(404)
-        res.end('user not found')
+        res.status(500)
+        res.end('not change password')
     }
 
     res.status(200)
-    res.end('Cambios relizados')
+    res.end('Cambio relizado')
     })
 
-router.put('/reset-password') // hacer con envio de email
+router.put('/reset-password', async (req, res) => {
+    const {email} = req.body
+    const codeRecover = generateRegistrationCode()
+
+    accountConfirmationEmail({ sendTo: email, code: codeRecover})
+
+    try {
+        const result = await usersRepository.changePasswordEmail({email , code: codeRecover})
+
+
+    if (!result) {
+        res.status(500)
+        res.end('not change recoverCode')
+    }
+    } catch (error) {
+        res.status(404)
+        res.end(error.message)
+        return
+    }
+
+    res.status(200)
+    res.end('email send')
+})
+
+router.get('/recover/:registrationCode', async (req, res) => {
+    const code = req.params.registrationCode
+    const password = req.body
+
+    let result
+    try {
+        result = await usersRepository.getRecover({code, password})
+    } catch (error) {
+        res.status(500)
+        res.end(error.message)
+        return
+    }
+    if (!result) {
+        res.status(404)
+        res.end('invalid registration code')
+        return
+    }
+    res.status(200)
+    res.send('ok')
+})
 
 
 router.delete('/proflie', comprobadorToken, async (req, res) => {
@@ -174,14 +224,14 @@ router.delete('/proflie', comprobadorToken, async (req, res) => {
     try {
         userDelete = await usersRepository.removeUser(userId)
     } catch (error) {
-        res.status(404)
+        res.status(500)
         res.end(error.message)
         return
     }
 
     if (!userId) {
         res.status(404)
-        res.end('User not found')
+        res.end('ERROR, invalid token')
     }
     if (!userDelete) {
         res.status(404)

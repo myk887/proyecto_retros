@@ -6,6 +6,4 @@ const generateRegistrationCode = () => {
 
 
 
-module.exports = {
-  generateRegistrationCode
-}
+module.exports = generateRegistrationCode

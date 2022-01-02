@@ -27,11 +27,11 @@ const dateNow = () => {
 }
 
 
-const postUsers = async (user) => {
+const postUsers = async ({user}) => {
     const at = dateNow()
     let users
     try {
-        [result] = await connection.query('INSERT INTO users SET ?', {email: user.email, password: user.password, username: user.username, avatar: user.avatar, active: false, deleted: false, role: 'normal', registrationCode: user.registrationCode, recoverCode: null, createdAt: at, modifiedAt: at})
+        [result] = await connection.query('INSERT INTO users SET ?', {email: user.email, password: user.password, username: user.username, avatar: user.avatar, active: false, deleted: false, registrationCode: user.registrationCode, recoverCode: null, createdAt: at, modifiedAt: at})
     } catch (error) {
         console.log(error.message)
     }
@@ -64,20 +64,70 @@ const getValidate = async (code) => {
     return true
 }
 
+const editUser = async ({user, id}) => {
+
+      let modific = 0
+      let result = await connection.query('UPDATE users SET username = ? WHERE id = ?', [user.username, id])
+      if (result[0].affectedRows === 0) modific += 1
+      result = await connection.query('UPDATE users SET email = ? WHERE id = ?', [user.email, id])
+      if (result[0].affectedRows === 0) modific += 1
+      result = await connection.query('UPDATE users SET password = ? WHERE id = ?', [user.password, id])
+      if (result[0].affectedRows === 0) modific += 1
+      result = await connection.query('UPDATE users SET avatar = ? WHERE id = ?', [user.avatar, id])
+      if (result[0].affectedRows === 0) modific += 1
+
+      if (modific !== 0) return
+
+      return true
+}
+
+const editPath = async ({id, passwordActually, passwordNew }) => {
+    const result = await  connection.query('select password from users where id = ?', [id])
+
+    if (!await bcrypt.compare(passwordActually, result[0][0].password)) return
+
+     const result2 = await connection.query('UPDATE users SET password = ? WHERE id = ?', {password: passwordNew, id})
+
+     if (result[0].affectedRows === 0 || result2[0].affectedRows === 0) return
+
+    return true
+}
+
+const changePasswordEmail = ({email,code}) => {
+
+    const recoverPassword = await connection.query('UPDATE users SET recoverCode = ? WHERE email = ?', {recoverCode: code, email})
+
+    if (recoverPassword[0].affectedRows === 0) return
+
+return true
+}
+
+const removeUser = async (userId) => {
+
+const result = await  connection.query('UPDATE users set deleted = 1 WHERE id = ?', [userId])
+
+if (result[0].affectedRows === 0) return
+
+return true
+}
+
+const getRecover = ({code, password}) => {
+    const changePassword = await connection.query('UPDATE users SET password = ? WHERE recoverCode = ?', {password, recoverCode: code})
+
+    if (changePassword[0].affectedRows === 0) return
+
+    return true
+}
+
 module.exports = {
     getUsers,
     getUserById,
     postUsers,
     postLogin,
-    getValidate
+    getValidate,
+    editUser,
+    editPath,
+    removeUser,
+    getRecover,
+    changePasswordEmail
 }
-
-
-// {
-//     "username": "abcp",
-//     "email": "zu.kucharova@gmail.com ",
-//     "avatar": "htepp//.es",
-//     "id": 14
-// }
-
-// result = await conection.query('UPDATE users SET username = ? WHERE id = ?', [user.username, user.id])
