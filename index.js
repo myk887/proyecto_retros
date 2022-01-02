@@ -64,8 +64,16 @@ res.send('ok')
 })
 
 
-app.post('/users/login', loginValidatorMiddleware, async (req, res) => {
+app.post('/users/login', async (req, res) => {
     const user = req.body
+
+    try {
+        await loginShema.validateAsync(user)
+     } catch (error) {
+         res.status(404)
+         res.end(error.message)
+         return
+     }
 
     let newUser
     try {
@@ -116,7 +124,7 @@ app.put('/users/:idUser', async (req, res) => {
 
 app.patch('/users/change/password',async (req, res) => {
     const {password} = req.body
-    const userId = Number(req.headers.authorization.id)
+    const userId = Number(jwt.verify(req.headers.authorization, JWT_PRIVATE_KEY).id.id)
 
     try {
         await passwodShema.validateAsync(user)
@@ -154,7 +162,7 @@ app.put('/users/reset-password') // hacer con envio de email
 
 
 app.delete('/users/proflie', async (req, res) => {
-    const userId = Number(req.headers.authorization.id)
+    const userId = Number(jwt.verify(req.headers.authorization, JWT_PRIVATE_KEY).id)
     let userDelete
 
     try {
@@ -179,7 +187,7 @@ app.delete('/users/proflie', async (req, res) => {
   })
 
 app.get('/users/profile', async (req, res) => {
-    const user = await usersRepository.getUserById(req.headers.authorization) //JWT
+    const user = await usersRepository.getUserById(jwt.verify(req.headers.authorization, JWT_PRIVATE_KEY).id) //JWT
     if (!user) {
         res.status(404)
         res.end('Users not found')
@@ -258,7 +266,7 @@ app.post('/articles', async (req, res) => {
 
 
 app.delete('/article/:idarticle', async (req, res) => {
-    const userId = Number(req.headers.authorization.id)
+    const userId = Number(jwt.verify(req.headers.authorization, JWT_PRIVATE_KEY).id.id)
     let articleDelete
 
     try {
@@ -303,7 +311,7 @@ app.post('/users/:idUserVotado/votes', async (req, res) => {
     }
     if (!newVoto) {
         res.status(404)
-        res.end('voto not add') // ???????????????????????
+        res.end('voto not add')
         return
       }
 
@@ -312,7 +320,7 @@ app.post('/users/:idUserVotado/votes', async (req, res) => {
 })
 
 app.get('/articles/enVenta',  async (req, res) => {
-    const userId = Number(req.headers.authorization.id)
+    const userId = Number(jwt.verify(req.headers.authorization, JWT_PRIVATE_KEY).id.id)
 
   const users = await usersRepository.getArticleEnVenta({ userId})
 
@@ -326,7 +334,7 @@ app.get('/articles/enVenta',  async (req, res) => {
 })
 
 app.get('/articles/comprados',  async (req, res) => {
-    const userId = Number(req.headers.authorization.id)
+    const userId = Number(jwt.verify(req.headers.authorization, JWT_PRIVATE_KEY).id.id)
 
   const users = await usersRepository.getArticlesComprados({ userId })
 
@@ -340,7 +348,7 @@ app.get('/articles/comprados',  async (req, res) => {
 })
 
 app.get('/articles/vendidos',  async (req, res) => {
-    const userId = Number(req.headers.authorization.id)
+    const userId = Number(jwt.verify(req.headers.authorization, JWT_PRIVATE_KEY).id.id)
 
   const users = await usersRepository.getArticlesVendidos({ userId})
 
