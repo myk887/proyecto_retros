@@ -23,12 +23,12 @@ router.get('/', async (req, res) => {
 })
 
 
-router.put('/:idArticle', async (req, res) => {
+router.put('/:idArticle', comprobadorToken, async (req, res) => {
     const articleId = req.params.idArticle
     const article = req.body
     let newArticle
     try {
-        newArticle = await articlesRepository.putArticlesById(articleId, article)
+        newArticle = await articlesRepository.putArticlesById({articleId, article})
     } catch (error) {
         res.status(500)
         res.end(error.message)
@@ -43,7 +43,8 @@ router.put('/:idArticle', async (req, res) => {
     res.send(newArticle)
 })
 
-router.post('/', async (req, res) => {
+router.post('/', comprobadorToken, async (req, res) => {
+    const infoUser = req.user
     const article = req.body
     try {
        await articleShema.validateAsync(article)
@@ -54,7 +55,7 @@ router.post('/', async (req, res) => {
     }
     let newArticle
     try {
-        newArticle = await articleRepository.postArticle(article)
+        newArticle = await articleRepository.postArticle({article, idUser: infoUser.id})
     } catch (error) {
         res.status(500)
         res.end(error.message)
@@ -73,10 +74,11 @@ router.post('/', async (req, res) => {
 router.delete('/:idarticle', comprobadorToken, async (req, res) => {
     const infoUser = req.user
     const userId = Number(infoUser.id)
+    const {idArticle} = req.body
     let articleDelete
 
     try {
-        userDelete = await articleRepository.removeArticle(userId)
+        userDelete = await articleRepository.removeArticle(idArticle)
     } catch (error) {
         res.status(404)
         res.end(error.message)
@@ -129,45 +131,66 @@ router.get('/enVenta', comprobadorToken,  async (req, res) => {
     const infoUser = req.user
     const userId = Number(infoUser.id)
 
-  const users = await usersRepository.getArticleEnVenta({ userId})
+  try {
+    const users = await usersRepository.getArticleEnVenta({ userId})
 
-  if (!article) {
-    res.status(404)
-    res.end('Users not found')
-    return
+    if (!article) {
+      res.status(404)
+      res.end('Users not found')
+      return
+    }
+    res.status(200)
+    res.send(article)
+
+  } catch (error) {
+        res.status(501)
+        res.end(error.message)
+        return
   }
-  res.status(200)
-  res.send(article)
 })
 
 router.get('/comprados', comprobadorToken,  async (req, res) => {
     const infoUser = req.user
     const userId = Number(infoUser.id)
 
-  const users = await usersRepository.getArticlesComprados({ userId })
+  try {
+    const users = await usersRepository.getArticlesComprados({ userId })
 
-  if (!users) {
-    res.status(404)
-    res.end('Users not found')
+    if (!users) {
+      res.status(404)
+      res.end('Users not found')
+      return
+    }
+    res.status(200)
+    res.send(users)
+
+  } catch (error) {
+    res.status(501)
+    res.end(error.message)
     return
   }
-  res.status(200)
-  res.send(users)
 })
 
 router.get('/vendidos', comprobadorToken, async (req, res) => {
     const infoUser = req.user
     const userId = Number(infoUser.id)
 
-  const users = await usersRepository.getArticlesVendidos({ userId})
+  try {
+    const users = await usersRepository.getArticlesVendidos({ userId})
 
-  if (!users) {
-    res.status(404)
-    res.end('Users not found')
+    if (!users) {
+      res.status(404)
+      res.end('Users not found')
+      return
+    }
+    res.status(200)
+    res.send(users)
+
+  } catch (error) {
+    res.status(501)
+    res.end(error.message)
     return
   }
-  res.status(200)
-  res.send(users)
 })
 
 

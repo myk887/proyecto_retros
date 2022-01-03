@@ -174,8 +174,6 @@ router.put('/reset-password', async (req, res) => {
     const {email} = req.body
     const codeRecover = generateRegistrationCode()
 
-    accountConfirmationEmail({ sendTo: email, code: codeRecover})
-
     try {
         const result = await usersRepository.changePasswordEmail({email , code: codeRecover})
 
@@ -184,6 +182,12 @@ router.put('/reset-password', async (req, res) => {
         res.status(500)
         res.end('not change recoverCode')
     }
+
+    accountConfirmationEmail({ sendTo: email, code: codeRecover})
+
+    res.status(200)
+    res.end('Email enviado')
+
     } catch (error) {
         res.status(404)
         res.end(error.message)

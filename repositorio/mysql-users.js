@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+// const jwt = require('jsonwebtoken')
 const connection = require('./../repositorio_entris/mysqlConnection')
 
 const getUsers = async () => {
@@ -47,7 +47,6 @@ const postLogin = async (user) => {
     const mysqlPassword = users[0].password
     const userId = users[0].id
 
-    // if (!active) return
 
     return {mysqlPassword, userId, active}
 }

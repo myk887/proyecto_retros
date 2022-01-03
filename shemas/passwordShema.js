@@ -1,12 +1,6 @@
 const Joi = require('joi')
 
 const passwordShema = Joi.object({
-    email: Joi.string()
-        .required()
-        .messages({
-            'string.entry': '[email] is required',
-            'any.required': '[email] is required'
-    }),
     password: Joi.string()
         .required()
         .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
