@@ -32,16 +32,9 @@ const getArticles = async ({search= '', order= 'place', direction = 'ASC'}) => {
 
 }
 
-const dateNow = () => {
-    const date = new Date()
-    const newDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-    return newDate
-}
 
 const postArticle = async ({article, idUser}) => {
-    const at = dateNow()
-
-        const articles = await connection.query('INSERT INTO articulos SET ?', {name: article.name, price: article.price, description: article.description, photo: article.photo, categoria: article.categoria, idUser: idUser, createdAt: at, modifiedAt: null})
+        const articles = await connection.query('INSERT INTO articulos SET ?', {name: article.name, price: article.price, description: article.description, photo: article.photo, categoria: article.category, idUser: idUser, createdAt: new Date(), modifiedAt: null})
         return articles[0]
 
 }
@@ -84,7 +77,7 @@ const getArticlesComprados = async (userId) => {
     return articles[0]
 }
 
-const getArticleEnVenta = async (userId) => {
+const getArticlesVendidos = async (userId) => {
     const articles =await  connection.query('select * from articulos where idUser = ? AND compradorId <> NULL', [userId])
     return articles[0]
 }
@@ -105,7 +98,7 @@ module.exports = {
     putArticlesById,
     getArticleEnVenta,
     getArticlesComprados,
-    getArticleEnVenta,
+    getArticlesVendidos,
     postVoto
 }
 

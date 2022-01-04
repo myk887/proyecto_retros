@@ -1,26 +1,51 @@
 const Joi = require('joi')
 
 const entryShema = Joi.object({
-    place: Joi.string()
+    name: Joi.string()
         .required()
         .min(3)
         .max(30)
         .messages({
-            'any.required': '[place] is required',
-            'string.entry': '[place] is required',
-            'string.min': '[place] should be between 3 and 50 characters',
-            'string.max': '[place] should be between 3 and 50 characters'
+            'any.required': '[name] is required',
+            'string.entry': '[name] is required',
+            'string.min': '[name] should be between 3 and 30 characters',
+            'string.max': '[name] should be between 3 and 30 characters'
     }),
     description: Joi.string()
         .required()
-        .min(20)
+        .min(10)
         .max(500)
         .messages({
-            'string.entry': '[place] is required',
-            'any.required': '[place] is required',
-            'string.min': '[place] should be between 3 and 50 characters',
-            'string.max': '[place] should be between 3 and 50 characters'
-    })
+            'string.entry': '[description] is required',
+            'any.required': '[description] is required',
+            'string.min': '[description] should be between 10 and 500 characters',
+            'string.max': '[description] should be between 10 and 500 characters'
+    }),
+    category: Joi.string()
+        .required()
+        .min(10)
+        .max(500)
+        .messages({
+            'string.entry': '[category] is required',
+            'any.required': '[category] is required',
+            'string.min': '[category] should be between 10 and 500 characters',
+            'string.max': '[category] should be between 10 and 500 characters'
+    }),
+    photo: Joi.string()
+        .required()
+        .min(10)
+        .max(500)
+        .messages({
+            'string.entry': '[photo] is required',
+            'any.required': '[photo] is required',
+            'string.min': '[photo] should be between 10 and 500 characters',
+            'string.max': '[photo] should be between 10 and 500 characters'
+    }),
+    price: Joi
+    .required()
+    .messages({
+        'any.required': '[price] is required'
+})
 })
 
 module.exports = entryShema

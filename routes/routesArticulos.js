@@ -1,13 +1,15 @@
 const router = require('express').Router()
 const articleShema = require('./../shemas/articulos')
 const comprobadorToken = require('./../helpers/comprobadorToken')
+const articleRepository = require('./../repositorio/mysql-articulos')
+
 
 
 router.get('/', async (req, res) => {
     const {categoria, search, order, direction} = req.query
     let articles
     try {
-        articles = await articlesRepository.getArticles({categoria, search, order, direction})
+        articles = await articleRepository.getArticles({categoria, search, order, direction})
     } catch (error) {
     res.status(500)
     res.end(error.message)
@@ -28,7 +30,7 @@ router.put('/:idArticle', comprobadorToken, async (req, res) => {
     const article = req.body
     let newArticle
     try {
-        newArticle = await articlesRepository.putArticlesById({articleId, article})
+        newArticle = await articleRepository.putArticlesById({articleId, article})
     } catch (error) {
         res.status(500)
         res.end(error.message)
@@ -44,7 +46,7 @@ router.put('/:idArticle', comprobadorToken, async (req, res) => {
 })
 
 router.post('/', comprobadorToken, async (req, res) => {
-    const infoUser = req.user
+    const infoUser = req.user.user
     const article = req.body
     try {
        await articleShema.validateAsync(article)
@@ -53,6 +55,7 @@ router.post('/', comprobadorToken, async (req, res) => {
         res.end(error.message)
         return
     }
+    console.log('hola')
     let newArticle
     try {
         newArticle = await articleRepository.postArticle({article, idUser: infoUser.id})

@@ -16,22 +16,22 @@ const usersShema = Joi.object({
             'string.pattern': '[password] error'
     }),
     username: Joi.string()
-    .required()
-    .min(3)
-    .max(80)
-    .messages({
-        'string.entry': '[password] is required',
-        'any.required': '[password] is required',
-        'string.min': '[password] should be between 3 and 50 characters',
-        'string.max': '[password] should be between 3 and 50 characters'
-    }),
+        .required()
+        .min(3)
+        .max(80)
+        .messages({
+            'string.entry': '[password] is required',
+            'any.required': '[password] is required',
+            'string.min': '[password] should be between 3 and 50 characters',
+            'string.max': '[password] should be between 3 and 50 characters'
+        }),
     avatar: Joi.string()
-    .min(3)
-    .messages({
-        'string.entry': '[password] is required',
-        'string.min': '[password] should be between 3 and 50 characters',
-        'string.max': '[password] should be between 3 and 50 characters'
-    })
+        .min(3)
+        .messages({
+            'string.entry': '[password] is required',
+            'string.min': '[password] should be between 3 and 50 characters',
+            'string.max': '[password] should be between 3 and 50 characters'
+        })
 })
 
 module.exports = usersShema
