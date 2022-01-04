@@ -75,7 +75,7 @@ router.post('/', comprobadorToken, async (req, res) => {
 
 
 router.delete('/:idarticle', comprobadorToken, async (req, res) => {
-    const infoUser = req.user
+    const infoUser = req.user.user
     const userId = Number(infoUser.id)
     const {idArticle} = req.body
     let articleDelete
@@ -131,7 +131,7 @@ router.post('/dUserVotado/votes',comprobadorToken, async (req, res) => {
 })
 
 router.get('/enVenta', comprobadorToken,  async (req, res) => {
-    const infoUser = req.user
+    const infoUser = req.user.user
     const userId = Number(infoUser.id)
 
   try {
@@ -175,7 +175,7 @@ router.get('/comprados', comprobadorToken,  async (req, res) => {
 })
 
 router.get('/vendidos', comprobadorToken, async (req, res) => {
-    const infoUser = req.user
+    const infoUser = req.user.user
     const userId = Number(infoUser.id)
 
   try {
