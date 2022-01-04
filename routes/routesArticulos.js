@@ -74,7 +74,7 @@ router.post('/', comprobadorToken, async (req, res) => {
 })
 
 
-router.delete('/:idarticle', comprobadorToken, async (req, res) => {
+router.delete('/:idArticle', comprobadorToken, async (req, res) => {
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
     const {idArticle} = req.body
@@ -103,7 +103,7 @@ router.delete('/:idarticle', comprobadorToken, async (req, res) => {
     res.end('article deleted')
   })
 
-router.post('/dUserVotado/votes',comprobadorToken, async (req, res) => {
+router.post('/idUserVotado/votes',comprobadorToken, async (req, res) => {
     const {idVendedor, voto} = req.body
 
     if (!idVendedor || !voto) {
