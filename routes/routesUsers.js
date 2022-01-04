@@ -1,6 +1,9 @@
+const express = require('express')
+require('dotenv').config()
 const router = require('express').Router()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const usersRepository = require('./../repositorio/mysql-users')
 const loginShema = require('./../shemas/loginUsers')
 const usersShema = require('./../shemas/users')
 const passwordShema = require('./../shemas/passwordShema')
@@ -9,7 +12,10 @@ const cryptoPassword = require('./../helpers/cryptoPassword')
 const generateRegistrationCode = require('./../helpers/generateRegistrationCode')
 const { accountConfirmationEmail, accountRecoverCodeEmail } = require('./../notificationEmail/emailSender')
 
+const app = express()
+app.use(express.json())
 
+const { JWT_PRIVATE_KEY} = process.env
 
 router.post('/',  async (req, res) => {
     const user = req.body
@@ -40,8 +46,14 @@ router.post('/',  async (req, res) => {
         res.end('Users not found')
         return
     }
+    try {
+         await accountRecoverCodeEmail({ sendTo: newUser.email, code: codeRegistration})
 
-    accountRecoverCodeEmail({ sendTo: newUser.email, code: codeRegistration})
+    } catch (error) {
+        res.status(500)
+        res.end(error.message)
+        return
+    }
 
     res.status(200)
     res.send(newUser)
@@ -97,16 +109,22 @@ router.post('/login', async (req, res) => {
         res.end('ERROR, not verify email')
         return
     }
-
-    if (!await bcrypt.compare(user.password, newUser.password)) {
-        res.status(403)
-        res.end('Invalid password')
+    try {
+        if (!await bcrypt.compare(user.password, newUser.mysqlPassword)) {
+            res.status(403)
+            res.end('Invalid password')
+            return
+            }
+    } catch (error) {
+        res.status(501)
+        res.end(error.message)
         return
     }
 
+
     const token = jwt.sign({
-        user: { id: newUser.id }
-        }, JWT_PRIVATE_KEY);
+        user: { id: newUser.userId }
+        }, JWT_PRIVATE_KEY)
 
         res.status(200)
         res.send({ token })
@@ -115,7 +133,7 @@ router.post('/login', async (req, res) => {
 
 router.put('/editUser',comprobadorToken, async (req, res) => {
     try {
-        const infoUser = req.user
+        const infoUser = req.user.user
         const user = req.body
         const newUser = await usersRepository.editUser({user, id: infoUser.id})
 
@@ -135,11 +153,12 @@ router.put('/editUser',comprobadorToken, async (req, res) => {
 
 router.patch('/change/password',comprobadorToken, async (req, res) => {
     const {passwordActually, passwordNew} = req.body
-    const infoUser = req.user
+    const infoUser = req.user.user
     const userId = Number(infoUser.id)
+    const passwordToChange = await cryptoPassword(passwordNew)
 
     try {
-        await passwordShema.validateAsync(user)
+        await passwordShema.validateAsync({password: passwordNew})
     } catch (error) {
             res.status(404)
             res.end(error.message)
@@ -154,14 +173,14 @@ router.patch('/change/password',comprobadorToken, async (req, res) => {
 
     let newUser
     try {
-            newUser = await usersRepository.editPath ({id: userId, passwordActually, passwordNew })
+            newUser = await usersRepository.editPath ({id: userId, passwordActually, passwordToChange })
     } catch (error) {
         res.status(404)
         res.end(error.message)
         return
     }
 
-    if (newUser) {
+    if (!newUser) {
         res.status(500)
         res.end('not change password')
     }
@@ -177,34 +196,39 @@ router.put('/reset-password', async (req, res) => {
     try {
         const result = await usersRepository.changePasswordEmail({email , code: codeRecover})
 
-
     if (!result) {
-        res.status(500)
-        res.end('not change recoverCode')
+        res.status(401)
+        res.end('not change recoverCode because user not found')
+        return
     }
 
     accountConfirmationEmail({ sendTo: email, code: codeRecover})
 
     res.status(200)
-    res.end('Email enviado')
+    res.end('Email send')
 
     } catch (error) {
         res.status(404)
         res.end(error.message)
         return
     }
-
-    res.status(200)
-    res.end('email send')
 })
 
 router.get('/recover/:registrationCode', async (req, res) => {
     const code = req.params.registrationCode
-    const password = req.body
+    const {email, password} = req.body
+    try {
+        await passwordShema.validateAsync({password})
+    } catch (error) {
+            res.status(404)
+            res.end(error.message)
+            return
+    }
+    const newPassword =  await cryptoPassword(password)
 
     let result
     try {
-        result = await usersRepository.getRecover({code, password})
+        result = await usersRepository.getRecover({email, code, newPassword})
     } catch (error) {
         res.status(500)
         res.end(error.message)
@@ -221,7 +245,7 @@ router.get('/recover/:registrationCode', async (req, res) => {
 
 
 router.delete('/proflie', comprobadorToken, async (req, res) => {
-    const infoUser = req.user
+    const infoUser = req.user.user
     const userId = Number(infoUser.id)
     let userDelete
 
@@ -247,7 +271,7 @@ router.delete('/proflie', comprobadorToken, async (req, res) => {
     })
 
 router.get('/profile',comprobadorToken, async (req, res) => {
-    const infoUser = req.user
+    const infoUser = req.user.user
     const user = await usersRepository.getUserById(infoUser.id) //JWT
     if (!user) {
         res.status(404)

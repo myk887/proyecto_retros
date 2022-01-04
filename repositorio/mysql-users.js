@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt')
-// const jwt = require('jsonwebtoken')
-const connection = require('./../repositorio_entris/mysqlConnection')
+const connection = require('./../repositorio/mysqlConnection')
 
 const getUsers = async () => {
     try {
@@ -20,18 +19,18 @@ const getUserById = async (idUser) => {
     }
 }
 
-const dateNow = () => {
-    const date = new Date()
-    const newDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-    return newDate
-}
+// const dateNow = () => {
+//     const date = new Date()
+//     const newDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+//     return newDate
+// }
 
 
-const postUsers = async ({user}) => {
-    const at = dateNow()
-    let users
+const postUsers = async (user) => {
+    // const at = dateNow()
+    let result
     try {
-        [result] = await connection.query('INSERT INTO users SET ?', {email: user.email, password: user.password, username: user.username, avatar: user.avatar, active: false, deleted: false, registrationCode: user.registrationCode, recoverCode: null, createdAt: at, modifiedAt: at})
+        [result] = await connection.query('INSERT INTO users SET ?', {email: user.email, password: user.password, username: user.username, avatar: user.avatar, active: false, deleted: false, registrationCode: user.registrationCode, recoverCode: null, createdAt: new Date(), modifiedAt: new Date()})
     } catch (error) {
         console.log(error.message)
     }
@@ -52,6 +51,7 @@ const postLogin = async (user) => {
 }
 
 const getValidate = async (code) => {
+
     const user = await  connection.query('select * from users where registrationCode = ?', [code])
     const findedUser = user[0][0]
 
@@ -80,40 +80,44 @@ const editUser = async ({user, id}) => {
       return true
 }
 
-const editPath = async ({id, passwordActually, passwordNew }) => {
+const editPath = async ({id, passwordActually, passwordToChange }) => {
     const result = await  connection.query('select password from users where id = ?', [id])
 
     if (!await bcrypt.compare(passwordActually, result[0][0].password)) return
 
-     const result2 = await connection.query('UPDATE users SET password = ? WHERE id = ?', {password: passwordNew, id})
+     const result2 = await connection.query('UPDATE users SET password = ? WHERE id = ?', [ passwordToChange, id])
 
      if (result[0].affectedRows === 0 || result2[0].affectedRows === 0) return
 
     return true
 }
 
-const changePasswordEmail = ({email,code}) => {
+const changePasswordEmail = async ({email,code}) => {
 
-    const recoverPassword = await connection.query('UPDATE users SET recoverCode = ? WHERE email = ?', {recoverCode: code, email})
+    const recoverPassword = await connection.query('UPDATE users SET recoverCode = ? WHERE email = ?', [code, email])
 
     if (recoverPassword[0].affectedRows === 0) return
 
-return true
+    return true
 }
 
 const removeUser = async (userId) => {
 
-const result = await  connection.query('UPDATE users set deleted = 1 WHERE id = ?', [userId])
+    const result = await  connection.query('UPDATE users set deleted = 1 WHERE id = ?', [userId])
 
-if (result[0].affectedRows === 0) return
+    if (result[0].affectedRows === 0) return
 
-return true
+    return true
 }
 
-const getRecover = ({code, password}) => {
-    const changePassword = await connection.query('UPDATE users SET password = ? WHERE recoverCode = ?', {password, recoverCode: code})
+const getRecover = async ({email, code, newPassword}) => {
+    const changePassword = await connection.query('UPDATE users SET password = ? WHERE recoverCode = ?', [newPassword, code])
 
     if (changePassword[0].affectedRows === 0) return
+
+    const recoverCodeOfNull = await connection.query('UPDATE users SET recoverCode = NULL WHERE email = ?', [email])
+
+    if (recoverCodeOfNull[0].affectedRows === 0) return
 
     return true
 }

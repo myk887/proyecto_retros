@@ -9,11 +9,11 @@ const app = express()
 
 app.use(express.json())
 
-app.post('/users', routesUsers)
+app.use('/users', routesUsers)
 
 
 
-app.get('/articles', routesArticulos)
+app.use('/articles', routesArticulos)
 
 
 

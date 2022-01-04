@@ -1,6 +1,6 @@
 // const bcrypt = require('bcrypt')
 // const jwt = require('jsonwebtoken')
-const connection = require('./mysqlConnection')
+const connection = require('./../repositorio/mysqlConnection')
 
 const getArticles = async ({search= '', order= 'place', direction = 'ASC'}) => {
     let orderBy
