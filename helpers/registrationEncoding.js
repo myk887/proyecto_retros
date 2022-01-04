@@ -1,9 +1,9 @@
 const crypto = require('crypto')
 
-const generateRegistrationCode = () => {
+const registrationEncoding = () => {
   return crypto.randomBytes(40).toString('hex')
 }
 
 
 
-module.exports = generateRegistrationCode
+module.exports = registrationEncoding

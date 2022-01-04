@@ -1,13 +1,13 @@
 const router = require('express').Router()
-const articleShema = require('./../shemas/articulos')
-const comprobadorToken = require('./../helpers/comprobadorToken')
+const articleSchema = require('./../schemas/articleSchema')
+const tokenVerifier = require('./../helpers/tokenVerifier')
 
 
 router.get('/', async (req, res) => {
-    const {categoria, search, order, direction} = req.query
+    const {category, search, order, direction} = req.query
     let articles
     try {
-        articles = await articlesRepository.getArticles({categoria, search, order, direction})
+        articles = await articlesRepository.getArticles({category, search, order, direction})
     } catch (error) {
     res.status(500)
     res.end(error.message)
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
     }
     if (!articles.length) {
         res.status(404)
-        res.end('Entris not found')
+        res.end('Entries not found')
         return
     }
     res.status(200)
@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
 })
 
 
-router.put('/:idArticle', comprobadorToken, async (req, res) => {
+router.put('/:idArticle', tokenVerifier, async (req, res) => {
     const articleId = req.params.idArticle
     const article = req.body
     let newArticle
@@ -36,18 +36,18 @@ router.put('/:idArticle', comprobadorToken, async (req, res) => {
     }
     if (!newArticle.length) {
         res.status(404)
-        res.end('Entris not found')
+        res.end('Entries not found')
         return
     }
     res.status(200)
     res.send(newArticle)
 })
 
-router.post('/', comprobadorToken, async (req, res) => {
+router.post('/', tokenVerifier, async (req, res) => {
     const infoUser = req.user
     const article = req.body
     try {
-       await articleShema.validateAsync(article)
+       await articleSchema.validateAsync(article)
     } catch (error) {
         res.status(404)
         res.end(error.message)
@@ -63,7 +63,7 @@ router.post('/', comprobadorToken, async (req, res) => {
     }
     if (!newArticle || !article) {
         res.status(404)
-        res.end('Entris not found')
+        res.end('Entries not found')
         return
     }
     res.status(200)
@@ -71,7 +71,7 @@ router.post('/', comprobadorToken, async (req, res) => {
 })
 
 
-router.delete('/:idarticle', comprobadorToken, async (req, res) => {
+router.delete('/:idarticle', tokenVerifier, async (req, res) => {
     const infoUser = req.user
     const userId = Number(infoUser.id)
     const {idArticle} = req.body
@@ -100,10 +100,10 @@ router.delete('/:idarticle', comprobadorToken, async (req, res) => {
     res.end('article deleted')
   })
 
-router.post('/dUserVotado/votes',comprobadorToken, async (req, res) => {
+router.post('/idVotedUser/votes', tokenVerifier, async (req, res) => {
     const {idVendedor, voto} = req.body
 
-    if (!idVendedor || !voto) {
+    if (!idSeller || !voto) {
         res.status(400)
         res.end('body incomplete')
         return
@@ -111,28 +111,28 @@ router.post('/dUserVotado/votes',comprobadorToken, async (req, res) => {
 
     let newVoto
     try {
-        newVoto = await usersRepository.postVoto({voto, idVendedor})
+        newVoto = await usersRepository.postVote({vote, idSeller})
     } catch (error) {
         res.status(501)
         res.end(error.message)
         return
     }
-    if (!newVoto) {
+    if (!newVote) {
         res.status(404)
-        res.end('voto not add')
+        res.end('Vote not add')
         return
       }
 
       res.status(200)
-      res.end('users voted')
+      res.end('User voted')
 })
 
-router.get('/enVenta', comprobadorToken,  async (req, res) => {
+router.get('/onSales', tokenVerifier,  async (req, res) => {
     const infoUser = req.user
     const userId = Number(infoUser.id)
 
   try {
-    const users = await usersRepository.getArticleEnVenta({ userId})
+    const users = await usersRepository.getArticleOnSales({userId})
 
     if (!article) {
       res.status(404)
@@ -149,16 +149,16 @@ router.get('/enVenta', comprobadorToken,  async (req, res) => {
   }
 })
 
-router.get('/comprados', comprobadorToken,  async (req, res) => {
+router.get('/comprados', tokenVerifier,  async (req, res) => {
     const infoUser = req.user
     const userId = Number(infoUser.id)
 
   try {
-    const users = await usersRepository.getArticlesComprados({ userId })
+    const users = await usersRepository.getArticlesPurchased({ userId })
 
     if (!users) {
       res.status(404)
-      res.end('Users not found')
+      res.end('User not found')
       return
     }
     res.status(200)
@@ -171,16 +171,16 @@ router.get('/comprados', comprobadorToken,  async (req, res) => {
   }
 })
 
-router.get('/vendidos', comprobadorToken, async (req, res) => {
+router.get('/vendidos', tokenVerifier, async (req, res) => {
     const infoUser = req.user
     const userId = Number(infoUser.id)
 
   try {
-    const users = await usersRepository.getArticlesVendidos({ userId})
+    const users = await usersRepository.getArticlesSold({ userId})
 
     if (!users) {
       res.status(404)
-      res.end('Users not found')
+      res.end('User not found')
       return
     }
     res.status(200)

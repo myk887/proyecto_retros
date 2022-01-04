@@ -1,12 +1,12 @@
 const router = require('express').Router()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const loginShema = require('./../shemas/loginUsers')
-const usersShema = require('./../shemas/users')
-const passwordShema = require('./../shemas/passwordShema')
-const comprobadorToken = require('./../helpers/comprobadorToken')
+const loginSchema = require('./../schemas/loginSchema')
+const usersSchema = require('./../schemas/userSchema')
+const passwordSchema = require('./../schemas/passwordSchema')
+const tokenVerifier = require('./../helpers/tokenVerifier')
 const cryptoPassword = require('./../helpers/cryptoPassword')
-const generateRegistrationCode = require('./../helpers/generateRegistrationCode')
+const registrationEncoding = require('./../helpers/registrationEncoding')
 const { accountConfirmationEmail, accountRecoverCodeEmail } = require('./../notificationEmail/emailSender')
 
 
@@ -15,13 +15,13 @@ router.post('/',  async (req, res) => {
     const user = req.body
 
     try {
-        await usersShema.validateAsync(user)
+        await usersSchema.validateAsync(user)
     } catch (error) {
          res.status(404)
          res.end(error.message)
          return
     }
-    const codeRegistration = generateRegistrationCode()
+    const codeRegistration = resgistrationEncoding()
     let newUser
     try {
         newUser = await usersRepository.postUsers({
@@ -72,7 +72,7 @@ router.post('/login', async (req, res) => {
     const user = req.body
 
     try {
-        await loginShema.validateAsync(user)
+        await loginSchema.validateAsync(user)
         } catch (error) {
             res.status(404)
             res.end(error.message)
@@ -113,7 +113,7 @@ router.post('/login', async (req, res) => {
 })
 
 
-router.put('/editUser',comprobadorToken, async (req, res) => {
+router.put('/editUser', tokenVerifier, async (req, res) => {
     try {
         const infoUser = req.user
         const user = req.body
@@ -133,7 +133,7 @@ router.put('/editUser',comprobadorToken, async (req, res) => {
     }
 })
 
-router.patch('/change/password',comprobadorToken, async (req, res) => {
+router.patch('/change/password', tokenVerifier, async (req, res) => {
     const {passwordActually, passwordNew} = req.body
     const infoUser = req.user
     const userId = Number(infoUser.id)
@@ -172,7 +172,7 @@ router.patch('/change/password',comprobadorToken, async (req, res) => {
 
 router.put('/reset-password', async (req, res) => {
     const {email} = req.body
-    const codeRecover = generateRegistrationCode()
+    const codeRecover = registrationEncoding()
 
     try {
         const result = await usersRepository.changePasswordEmail({email , code: codeRecover})
@@ -220,7 +220,7 @@ router.get('/recover/:registrationCode', async (req, res) => {
 })
 
 
-router.delete('/proflie', comprobadorToken, async (req, res) => {
+router.delete('/proflie', tokenVerifier, async (req, res) => {
     const infoUser = req.user
     const userId = Number(infoUser.id)
     let userDelete
@@ -243,15 +243,15 @@ router.delete('/proflie', comprobadorToken, async (req, res) => {
     }
 
     res.status(200)
-    res.end('user deleted')
+    res.end('User deleted')
     })
 
-router.get('/profile',comprobadorToken, async (req, res) => {
+router.get('/profile', tokenVerifier, async (req, res) => {
     const infoUser = req.user
     const user = await usersRepository.getUserById(infoUser.id) //JWT
     if (!user) {
         res.status(404)
-        res.end('Users not found')
+        res.end('User not found')
         return
     }
     res.status(200)

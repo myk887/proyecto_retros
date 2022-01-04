@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 
-const comprobadorToken = (req, res, next) => {
+const tokenVerifier = (req, res, next) => {
     try {
         const userToken = req.headers.authorization
         const infoToken = jwt.verify(userToken, JWT_PRIVATE_KEY)
@@ -24,4 +24,4 @@ const comprobadorToken = (req, res, next) => {
     }
 }
 
-module.exports = comprobadorToken
+module.exports = tokenVerifier

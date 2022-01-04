@@ -1,6 +1,6 @@
 const Joi = require('joi')
 
-const usersShema = Joi.object({
+const usersSchema = Joi.object({
     email: Joi.string()
         .required()
         .messages({
@@ -34,4 +34,4 @@ const usersShema = Joi.object({
     })
 })
 
-module.exports = usersShema
+module.exports = usersSchema

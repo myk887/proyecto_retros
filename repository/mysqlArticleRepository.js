@@ -74,22 +74,22 @@ const removeArticle = async ({id}) => {
 
 }
 
-const getArticleEnVenta = async (userId) => {
+const getArticleOnSales = async (userId) => {
         const articles =await  connection.query('select * from articulos where idUser = ? AND compradorId = NULL', [userId])
         return articles[0]
 }
 
-const getArticlesComprados = async (userId) => {
+const getArticlesPurchased = async (userId) => {
     const articles =await  connection.query('select * from articulos where compradorId = ?', [userId])
     return articles[0]
 }
 
-const getArticleEnVenta = async (userId) => {
+const getArticleSold = async (userId) => {
     const articles =await  connection.query('select * from articulos where idUser = ? AND compradorId <> NULL', [userId])
     return articles[0]
 }
 
-const postVoto = async ({voto, idVendedor}) => {
+const postVote = async ({voto, idVendedor}) => {
     const at = dateNow()
 
     const articles = await connection.query('INSERT INTO user_votes SET ?', {vote: voto, idUserVotado: idVendedor, createdAt: at})
@@ -103,10 +103,10 @@ module.exports = {
     postArticle,
     removeArticle,
     putArticlesById,
-    getArticleEnVenta,
-    getArticlesComprados,
-    getArticleEnVenta,
-    postVoto
+    getArticleOnSales,
+    getArticlesPurchased,
+    getArticleSold,
+    postVote
 }
 
 

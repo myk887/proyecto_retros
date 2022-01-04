@@ -1,12 +1,6 @@
 const Joi = require('joi')
 
-const loginShema = Joi.object({
-    email: Joi.string()
-        .required()
-        .messages({
-            'string.entry': '[email] is required',
-            'any.required': '[email] is required'
-    }),
+const passwordSchema = Joi.object({
     password: Joi.string()
         .required()
         .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
@@ -17,4 +11,4 @@ const loginShema = Joi.object({
     })
 })
 
-module.exports = loginShema
+module.exports = passwordSchema

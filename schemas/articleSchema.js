@@ -1,6 +1,6 @@
 const Joi = require('joi')
 
-const entryShema = Joi.object({
+const entrySchema = Joi.object({
     place: Joi.string()
         .required()
         .min(3)
@@ -23,4 +23,4 @@ const entryShema = Joi.object({
     })
 })
 
-module.exports = entryShema
+module.exports = entrySchema
