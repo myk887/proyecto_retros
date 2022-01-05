@@ -2,7 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const {PORT, BASE_URL} = process.env
 const routesUsers = require('./routes/routesUsers')
-const routesArticulos = require('./routes/routesArticulos')
+const routesArticles = require('./routes/routesArticles')
 
 
 const app = express()
@@ -13,7 +13,7 @@ app.use('/users', routesUsers)
 
 
 
-app.use('/articles', routesArticulos)
+app.use('/articles', routesArticles)
 
 
 
