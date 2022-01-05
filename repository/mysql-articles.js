@@ -1,4 +1,4 @@
-const connection = require('./../repository/mysqlConnection')
+const connection = require('./mysqlConnection')
 
 const getArticlesBySearch = async ({search = ''}) => {
 

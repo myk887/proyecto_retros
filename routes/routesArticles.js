@@ -1,7 +1,7 @@
 const router = require('express').Router()
-const articleSchema = require('./../schemas/articulos')
-const tokenVerifier = require('./../helpers/tokenVerifier')
-const articleRepository = require('./../repository/mysql-articulos')
+const articleSchema = require('../schemas/articles')
+const tokenVerifier = require('../helpers/tokenVerifier')
+const articleRepository = require('../repository/mysql-articles')
 
 
 
