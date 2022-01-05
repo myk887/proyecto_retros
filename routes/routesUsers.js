@@ -86,7 +86,7 @@ router.post('/login', async (req, res) => {
     try {
         await loginSchema.validateAsync(user)
         } catch (error) {
-            res.status(404)
+            res.status(500)
             res.end(error.message)
             return
         }
@@ -95,12 +95,12 @@ router.post('/login', async (req, res) => {
     try {
         newUser = await usersRepository.postLogin(user)
     } catch (error) {
-        res.status(501)
+        res.status(500)
         res.end(error.message)
         return
     }
     if (!newUser) {
-        res.status(404)
+        res.status(401)
         res.end('ERROR, verify email')
         return
     }
@@ -112,11 +112,11 @@ router.post('/login', async (req, res) => {
     try {
         if (!await bcrypt.compare(user.password, newUser.mysqlPassword)) {
             res.status(403)
-            res.end('Invalid password')
+            res.end('Invalid credentials')
             return
             }
     } catch (error) {
-        res.status(501)
+        res.status(500)
         res.end(error.message)
         return
     }
@@ -139,7 +139,7 @@ router.put('/editUser',tokenVerifier, async (req, res) => {
 
         if (!user || !newUser) {
             res.status(400)
-            res.end('Any change not executed')
+            res.end('Any change executed')
         } else {
             res.status(200)
             res.send(newUser)
@@ -152,7 +152,7 @@ router.put('/editUser',tokenVerifier, async (req, res) => {
 })
 
 router.patch('/change/password',tokenVerifier, async (req, res) => {
-    const {passwordActually, passwordNew} = req.body
+    const {currentPassword, passwordNew} = req.body
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
     const passwordToChange = await encodingBcryptPassword(passwordNew)
@@ -167,26 +167,26 @@ router.patch('/change/password',tokenVerifier, async (req, res) => {
 
     if (!userId) {
         res.status(404)
-        res.end('User not found/ token not correct')
+        res.end('Wrong token')
         return
     }
 
     let newUser
     try {
-            newUser = await usersRepository.editPath ({id: userId, passwordActually, passwordToChange })
+            newUser = await usersRepository.editPath ({id: userId, currentPassword, passwordToChange })
     } catch (error) {
-        res.status(404)
+        res.status(500)
         res.end(error.message)
         return
     }
 
     if (!newUser) {
-        res.status(500)
+        res.status(404)
         res.end('not change password')
     }
 
     res.status(200)
-    res.end('Cambio relizado')
+    res.end('Sucesfull change')
     })
 
 router.put('/reset-password', async (req, res) => {
@@ -197,7 +197,7 @@ router.put('/reset-password', async (req, res) => {
         const result = await usersRepository.changePasswordEmail({email , code: codeRecover})
 
     if (!result) {
-        res.status(401)
+        res.status(404)
         res.end('not change recoverCode because user not found')
         return
     }
@@ -208,7 +208,7 @@ router.put('/reset-password', async (req, res) => {
     res.end('Email send')
 
     } catch (error) {
-        res.status(404)
+        res.status(500)
         res.end(error.message)
         return
     }
@@ -220,7 +220,7 @@ router.get('/recover/:registrationCode', async (req, res) => {
     try {
         await passwordSchema.validateAsync({password})
     } catch (error) {
-            res.status(404)
+            res.status(400)
             res.end(error.message)
             return
     }
@@ -286,7 +286,7 @@ router.post('/idVotedUser/votes',tokenVerifier, async (req, res) => {
     const {idSeller, vote} = req.body
 
     if (!idSeller || !vote) {
-        res.status(400)
+        res.status(404)
         res.end('body incomplete')
         return
       }
@@ -295,7 +295,7 @@ router.post('/idVotedUser/votes',tokenVerifier, async (req, res) => {
     try {
         newVote = await usersRepository.postVote({vote, idSeller})
     } catch (error) {
-        res.status(501)
+        res.status(500)
         res.end(error.message)
         return
     }

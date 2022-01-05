@@ -83,7 +83,7 @@ router.delete('/:idArticle', tokenVerifier, async (req, res) => {
     try {
       articleDelete = await articleRepository.removeArticle(idArticle)
     } catch (error) {
-        res.status(404)
+        res.status(500)
         res.end(error.message)
         return
     }
@@ -95,12 +95,12 @@ router.delete('/:idArticle', tokenVerifier, async (req, res) => {
     }
     if (!articleDelete) {
       res.status(404)
-      res.end('User not exits')
+      res.end('Article not exits')
       return
     }
 
     res.status(200)
-    res.end('article deleted')
+    res.end('Article deleted')
   })
 
 
@@ -120,7 +120,7 @@ router.get('/onSales', tokenVerifier,  async (req, res) => {
     res.send(articles)
 
   } catch (error) {
-        res.status(501)
+        res.status(500)
         res.end(error.message)
         return
   }
@@ -135,14 +135,14 @@ router.get('/purchased', tokenVerifier,  async (req, res) => {
 
     if (!articles) {
       res.status(404)
-      res.end('Users not found')
+      res.end('Articles not found')
       return
     }
     res.status(200)
     res.send(articles)
 
   } catch (error) {
-    res.status(501)
+    res.status(500)
     res.end(error.message)
     return
   }
@@ -157,14 +157,14 @@ router.get('/sold', tokenVerifier, async (req, res) => {
 
     if (!articles) {
       res.status(404)
-      res.end('Users not found')
+      res.end('Articles not found')
       return
     }
     res.status(200)
     res.send(articles)
 
   } catch (error) {
-    res.status(501)
+    res.status(500)
     res.end(error.message)
     return
   }

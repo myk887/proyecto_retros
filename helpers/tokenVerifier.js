@@ -12,8 +12,8 @@ const tokenVerifier = (req, res, next) => {
 
 
         if (!userId || (isNaN(userId))) {
-            res.status(400)
-            res.end('invalid token code')
+            res.status(401)
+            res.end('invalid token')
             return
         }
 

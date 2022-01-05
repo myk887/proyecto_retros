@@ -73,11 +73,11 @@ const editUser = async ({user, id}) => {
       return true
 }
 
-const editPath = async ({id, passwordActually, passwordToChange }) => {
+const editPath = async ({id, currentPassword, passwordToChange }) => {
    
     const result = await  connection.query('select password from users where id = ?', [id])
- console.log(passwordActually, result[0][0].password)
-    if (!await bcrypt.compare(passwordActually, result[0][0].password)) return
+ console.log(currentPassword, result[0][0].password)
+    if (!await bcrypt.compare(currentPassword, result[0][0].password)) return
 
      const result2 = await connection.query('UPDATE users SET password = ? WHERE id = ?', [ passwordToChange, id])
 
