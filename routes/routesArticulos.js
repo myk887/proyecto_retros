@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const articleSchema = require('./../schemas/articulos')
 const tokenVerifier = require('./../helpers/tokenVerifier')
-const articleRepository = require('./../repositorio/mysql-articulos')
+const articleRepository = require('./../repository/mysql-articulos')
 
 
 
@@ -104,12 +104,12 @@ router.delete('/:idArticle', tokenVerifier, async (req, res) => {
   })
 
 
-router.get('/enVenta', tokenVerifier,  async (req, res) => {
+router.get('/onSales', tokenVerifier,  async (req, res) => {
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
 
   try {
-    const articles = await articleRepository.getArticleEnVenta({ userId})
+    const articles = await articleRepository.getArticleOnSales({ userId})
 
     if (!articles) {
       res.status(404)
@@ -126,12 +126,12 @@ router.get('/enVenta', tokenVerifier,  async (req, res) => {
   }
 })
 
-router.get('/comprados', tokenVerifier,  async (req, res) => {
+router.get('/purchased', tokenVerifier,  async (req, res) => {
     const infoUser = req.user
     const userId = Number(infoUser.id)
 
   try {
-    const articles = await articleRepository.getArticlesComprados({ userId })
+    const articles = await articleRepository.getArticlesPurchased({ userId })
 
     if (!articles) {
       res.status(404)
@@ -148,12 +148,12 @@ router.get('/comprados', tokenVerifier,  async (req, res) => {
   }
 })
 
-router.get('/vendidos', tokenVerifier, async (req, res) => {
+router.get('/sold', tokenVerifier, async (req, res) => {
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
 
   try {
-    const articles = await articleRepository.getArticlesVendidos({ userId})
+    const articles = await articleRepository.getArticleSold({ userId})
 
     if (!articles) {
       res.status(404)

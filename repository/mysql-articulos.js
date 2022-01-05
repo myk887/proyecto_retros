@@ -1,4 +1,4 @@
-const connection = require('./../repositorio/mysqlConnection')
+const connection = require('./../repository/mysqlConnection')
 
 const getArticlesBySearch = async ({search = ''}) => {
 
@@ -45,7 +45,7 @@ const removeArticle = async (id) => {
 
 }
 
-const getArticleEnVenta = async ({userId}) => {
+const getArticleOnSales = async ({userId}) => {
         const articles =await  connection.query('select * from articulos WHERE idUser = ? AND compradorId is NULL', [userId])
 
         if (!articles[0]) return false
@@ -53,7 +53,7 @@ const getArticleEnVenta = async ({userId}) => {
         return articles[0]
 }
 
-const getArticlesBySearchComprados = async ({userId}) => {
+const getArticlesPurchased = async ({userId}) => {
     const articles =await  connection.query('select * from articulos WHERE compradorId = ?', [userId])
 
     if (!articles[0]) return false
@@ -61,7 +61,7 @@ const getArticlesBySearchComprados = async ({userId}) => {
     return articles[0]
 }
 
-const getArticlesBySearchVendidos = async ({userId}) => {
+const getArticleSold = async ({userId}) => {
     const articles =await  connection.query('select * from articulos WHERE idUser = ? AND compradorId is not NULL', [userId])
 
     if (!articles[0]) return false
@@ -75,9 +75,9 @@ module.exports = {
     postArticle,
     removeArticle,
     putArticlesById,
-    getArticleEnVenta,
-    getArticlesBySearchComprados,
-    getArticlesBySearchVendidos
+    getArticleOnSales,
+    getArticlesPurchased,
+    getArticleSold
 }
 
 

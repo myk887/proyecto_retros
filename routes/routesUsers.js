@@ -3,7 +3,7 @@ require('dotenv').config()
 const router = require('express').Router()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const usersRepository = require('./../repositorio/mysql-users')
+const usersRepository = require('./../repository/mysql-users')
 const loginSchema = require('./../schemas/loginUsers')
 const usersSchema = require('./../schemas/users')
 const passwordSchema = require('./../schemas/passwordSchema')
@@ -282,26 +282,26 @@ router.get('/profile',tokenVerifier, async (req, res) => {
     res.send(user)
 })
 
-router.post('/idUserVotado/votes',tokenVerifier, async (req, res) => {
-    const {idVendedor, voto} = req.body
+router.post('/idVotedUser/votes',tokenVerifier, async (req, res) => {
+    const {idSeller, vote} = req.body
 
-    if (!idVendedor || !voto) {
+    if (!idSeller || !vote) {
         res.status(400)
         res.end('body incomplete')
         return
       }
 
-    let newVoto
+    let newVote
     try {
-        newVoto = await usersRepository.postVoto({voto, idVendedor})
+        newVote = await usersRepository.postVote({vote, idSeller})
     } catch (error) {
         res.status(501)
         res.end(error.message)
         return
     }
-    if (!newVoto) {
+    if (!newvote) {
         res.status(404)
-        res.end('voto not add')
+        res.end('vote not add')
         return
       }
 

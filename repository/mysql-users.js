@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt')
-const connection = require('./../repositorio/mysqlConnection')
+const connection = require('./../repository/mysqlConnection')
 
 const getUsers = async () => {
     try {
@@ -122,9 +122,9 @@ const getRecover = async ({email, code, newPassword}) => {
     return true
 }
 
-const postVoto = async ({voto, idVendedor}) => {
+const postVote = async ({vote, idSeller}) => {
 
-    const articles = await connection.query('INSERT INTO user_votes SET ?', {vote: voto, idUserVotado: idVendedor, createdAt: new Date()})
+    const articles = await connection.query('INSERT INTO user_votes SET ?', {vote: vote, idUserVotado: idSeller, createdAt: new Date()})
     return articles[0]
 
 }
@@ -140,5 +140,5 @@ module.exports = {
     removeUser,
     getRecover,
     changePasswordEmail,
-    postVoto
+    postVote
 }
