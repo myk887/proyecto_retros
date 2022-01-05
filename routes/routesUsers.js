@@ -4,9 +4,9 @@ const router = require('express').Router()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const usersRepository = require('./../repositorio/mysql-users')
-const loginShema = require('./../shemas/loginUsers')
-const usersShema = require('./../shemas/users')
-const passwordShema = require('./../shemas/passwordShema')
+const loginSchema = require('./../schemas/loginUsers')
+const usersSchema = require('./../schemas/users')
+const passwordSchema = require('./../schemas/passwordSchema')
 const tokenVerifier = require('./../helpers/tokenVerifier')
 const cryptoPassword = require('./../helpers/cryptoPassword')
 const generateRegistrationCode = require('./../helpers/generateRegistrationCode')
@@ -21,7 +21,7 @@ router.post('/',  async (req, res) => {
     const user = req.body
 
     try {
-        await usersShema.validateAsync(user)
+        await usersSchema.validateAsync(user)
     } catch (error) {
          res.status(404)
          res.end(error.message)
@@ -84,7 +84,7 @@ router.post('/login', async (req, res) => {
     const user = req.body
 
     try {
-        await loginShema.validateAsync(user)
+        await loginSchema.validateAsync(user)
         } catch (error) {
             res.status(404)
             res.end(error.message)
@@ -158,7 +158,7 @@ router.patch('/change/password',tokenVerifier, async (req, res) => {
     const passwordToChange = await cryptoPassword(passwordNew)
 
     try {
-        await passwordShema.validateAsync({password: passwordNew})
+        await passwordSchema.validateAsync({password: passwordNew})
     } catch (error) {
             res.status(404)
             res.end(error.message)
@@ -218,7 +218,7 @@ router.get('/recover/:registrationCode', async (req, res) => {
     const code = req.params.registrationCode
     const {email, password} = req.body
     try {
-        await passwordShema.validateAsync({password})
+        await passwordSchema.validateAsync({password})
     } catch (error) {
             res.status(404)
             res.end(error.message)

@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const articleShema = require('./../shemas/articulos')
+const articleSchema = require('./../schemas/articulos')
 const tokenVerifier = require('./../helpers/tokenVerifier')
 const articleRepository = require('./../repositorio/mysql-articulos')
 
@@ -49,7 +49,7 @@ router.post('/', tokenVerifier, async (req, res) => {
     const infoUser = req.user.user
     const article = req.body
     try {
-       await articleShema.validateAsync(article)
+       await articleSchema.validateAsync(article)
     } catch (error) {
         res.status(404)
         res.end(error.message)
