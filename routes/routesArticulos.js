@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const articleShema = require('./../shemas/articulos')
-const comprobadorToken = require('./../helpers/comprobadorToken')
+const tokenVerifier = require('./../helpers/tokenVerifier')
 const articleRepository = require('./../repositorio/mysql-articulos')
 
 
@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
 })
 
 
-router.put('/:idArticle', comprobadorToken, async (req, res) => {
+router.put('/:idArticle', tokenVerifier, async (req, res) => {
     const articleId = req.params.idArticle
     const article = req.body
     let newArticle
@@ -45,7 +45,7 @@ router.put('/:idArticle', comprobadorToken, async (req, res) => {
     res.send(newArticle)
 })
 
-router.post('/', comprobadorToken, async (req, res) => {
+router.post('/', tokenVerifier, async (req, res) => {
     const infoUser = req.user.user
     const article = req.body
     try {
@@ -74,7 +74,7 @@ router.post('/', comprobadorToken, async (req, res) => {
 })
 
 
-router.delete('/:idArticle', comprobadorToken, async (req, res) => {
+router.delete('/:idArticle', tokenVerifier, async (req, res) => {
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
     const idArticle = req.params.idArticle
@@ -104,7 +104,7 @@ router.delete('/:idArticle', comprobadorToken, async (req, res) => {
   })
 
 
-router.get('/enVenta', comprobadorToken,  async (req, res) => {
+router.get('/enVenta', tokenVerifier,  async (req, res) => {
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
 
@@ -126,7 +126,7 @@ router.get('/enVenta', comprobadorToken,  async (req, res) => {
   }
 })
 
-router.get('/comprados', comprobadorToken,  async (req, res) => {
+router.get('/comprados', tokenVerifier,  async (req, res) => {
     const infoUser = req.user
     const userId = Number(infoUser.id)
 
@@ -148,7 +148,7 @@ router.get('/comprados', comprobadorToken,  async (req, res) => {
   }
 })
 
-router.get('/vendidos', comprobadorToken, async (req, res) => {
+router.get('/vendidos', tokenVerifier, async (req, res) => {
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
 

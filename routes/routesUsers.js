@@ -7,7 +7,7 @@ const usersRepository = require('./../repositorio/mysql-users')
 const loginShema = require('./../shemas/loginUsers')
 const usersShema = require('./../shemas/users')
 const passwordShema = require('./../shemas/passwordShema')
-const comprobadorToken = require('./../helpers/comprobadorToken')
+const tokenVerifier = require('./../helpers/tokenVerifier')
 const cryptoPassword = require('./../helpers/cryptoPassword')
 const generateRegistrationCode = require('./../helpers/generateRegistrationCode')
 const { accountConfirmationEmail, accountRecoverCodeEmail } = require('./../notificationEmail/emailSender')
@@ -131,7 +131,7 @@ router.post('/login', async (req, res) => {
 })
 
 
-router.put('/editUser',comprobadorToken, async (req, res) => {
+router.put('/editUser',tokenVerifier, async (req, res) => {
     try {
         const infoUser = req.user.user
         const user = req.body
@@ -151,7 +151,7 @@ router.put('/editUser',comprobadorToken, async (req, res) => {
     }
 })
 
-router.patch('/change/password',comprobadorToken, async (req, res) => {
+router.patch('/change/password',tokenVerifier, async (req, res) => {
     const {passwordActually, passwordNew} = req.body
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
@@ -244,7 +244,7 @@ router.get('/recover/:registrationCode', async (req, res) => {
 })
 
 
-router.delete('/proflie', comprobadorToken, async (req, res) => {
+router.delete('/proflie', tokenVerifier, async (req, res) => {
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
     let userDelete
@@ -270,7 +270,7 @@ router.delete('/proflie', comprobadorToken, async (req, res) => {
     res.end('user deleted')
     })
 
-router.get('/profile',comprobadorToken, async (req, res) => {
+router.get('/profile',tokenVerifier, async (req, res) => {
     const infoUser = req.user.user
     const user = await usersRepository.getUserById(infoUser.id) //JWT
     if (!user) {
@@ -282,7 +282,7 @@ router.get('/profile',comprobadorToken, async (req, res) => {
     res.send(user)
 })
 
-router.post('/idUserVotado/votes',comprobadorToken, async (req, res) => {
+router.post('/idUserVotado/votes',tokenVerifier, async (req, res) => {
     const {idVendedor, voto} = req.body
 
     if (!idVendedor || !voto) {

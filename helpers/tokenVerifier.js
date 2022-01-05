@@ -3,7 +3,7 @@ require('dotenv').config()
 const { JWT_PRIVATE_KEY} = process.env
 
 
-const comprobadorToken = (req, res, next) => {
+const tokenVerifier = (req, res, next) => {
     try {
         const bearerToken = req.headers.authorization
         const userToken = bearerToken.replace('Bearer ', '')
@@ -28,4 +28,4 @@ const comprobadorToken = (req, res, next) => {
     }
 }
 
-module.exports = comprobadorToken
+module.exports = tokenVerifier
