@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const connection = require('./../repository/mysqlConnection')
+const encodingBcryptPassword = require('../helpers/encodingBcryptPassword')
 
 const getUsers = async () => {
     try {
@@ -19,15 +20,9 @@ const getUserById = async (idUser) => {
     }
 }
 
-// const dateNow = () => {
-//     const date = new Date()
-//     const newDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-//     return newDate
-// }
 
 
 const postUsers = async (user) => {
-    // const at = dateNow()
     let result
     try {
         [result] = await connection.query('INSERT INTO users SET ?', {email: user.email, password: user.password, username: user.username, avatar: user.avatar, active: false, deleted: false, registrationCode: user.registrationCode, recoverCode: null, createdAt: new Date(), modifiedAt: new Date()})
@@ -58,7 +53,6 @@ const getValidate = async (code) => {
     if (!findedUser) return false
 
     await connection.query('UPDATE users SET active = 1, registrationCode = null WHERE id = ?', [Number(findedUser.id)])
-    // await connection.query('UPDATE users SET registrationCode = null WHERE id = ?', [Number(user[0][0].id)])
 
     return true
 }
@@ -70,8 +64,7 @@ const editUser = async ({user, id}) => {
       if (result[0].affectedRows === 0) modific += 1
       result = await connection.query('UPDATE users SET email = ? WHERE id = ?', [user.email, id])
       if (result[0].affectedRows === 0) modific += 1
-      result = await connection.query('UPDATE users SET password = ? WHERE id = ?', [user.password, id])
-      if (result[0].affectedRows === 0) modific += 1
+      result = await connection.query('UPDATE users SET password = ? WHERE id = ?', [await encodingBcryptPassword(user.password), id])
       result = await connection.query('UPDATE users SET avatar = ? WHERE id = ?', [user.avatar, id])
       if (result[0].affectedRows === 0) modific += 1
 
@@ -81,8 +74,9 @@ const editUser = async ({user, id}) => {
 }
 
 const editPath = async ({id, passwordActually, passwordToChange }) => {
+   
     const result = await  connection.query('select password from users where id = ?', [id])
-
+ console.log(passwordActually, result[0][0].password)
     if (!await bcrypt.compare(passwordActually, result[0][0].password)) return
 
      const result2 = await connection.query('UPDATE users SET password = ? WHERE id = ?', [ passwordToChange, id])

@@ -299,7 +299,7 @@ router.post('/idVotedUser/votes',tokenVerifier, async (req, res) => {
         res.end(error.message)
         return
     }
-    if (!newvote) {
+    if (!newVote) {
         res.status(404)
         res.end('vote not add')
         return
