@@ -74,7 +74,7 @@ const editUser = async ({user, id}) => {
 }
 
 const editPath = async ({id, currentPassword, passwordToChange }) => {
-   
+
     const result = await  connection.query('select password from users where id = ?', [id])
  console.log(currentPassword, result[0][0].password)
     if (!await bcrypt.compare(currentPassword, result[0][0].password)) return

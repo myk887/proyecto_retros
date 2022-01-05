@@ -6,5 +6,3 @@ const encodingBcryptPassword = async (password) => {
 }
 
 module.exports = encodingBcryptPassword
-
-//encodingBencodingBcryptPassword
