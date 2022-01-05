@@ -118,7 +118,7 @@ const getRecover = async ({email, code, newPassword}) => {
 
 const postVote = async ({vote, idSeller}) => {
 
-    const articles = await connection.query('INSERT INTO user_votes SET ?', {vote: vote, idUserVotado: idSeller, createdAt: new Date()})
+    const articles = await connection.query('INSERT INTO user_votes SET ?', {vote: vote, idVotedUser: idSeller, createdAt: new Date()})
     return articles[0]
 
 }

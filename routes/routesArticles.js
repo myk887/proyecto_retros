@@ -127,7 +127,7 @@ router.get('/onSales', tokenVerifier,  async (req, res) => {
 })
 
 router.get('/purchased', tokenVerifier,  async (req, res) => {
-    const infoUser = req.user
+    const infoUser = req.user.user
     const userId = Number(infoUser.id)
 
   try {
