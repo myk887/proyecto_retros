@@ -6,10 +6,10 @@ const articleRepository = require('./../repositorio/mysql-articulos')
 
 
 router.get('/', async (req, res) => {
-    const {categoria, search, order, direction} = req.query
+    const {search} = req.query
     let articles
     try {
-        articles = await articleRepository.getArticles({categoria, search, order, direction})
+        articles = await articleRepository.getArticlesBySearch({search})
     } catch (error) {
     res.status(500)
     res.end(error.message)
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
     }
     if (!articles.length) {
         res.status(404)
-        res.end('Entris not found')
+        res.end('Articles not found')
         return
     }
     res.status(200)
@@ -36,9 +36,9 @@ router.put('/:idArticle', comprobadorToken, async (req, res) => {
         res.end(error.message)
         return
     }
-    if (!newArticle.length) {
+    if (!newArticle) {
         res.status(404)
-        res.end('Entris not found')
+        res.end('articles not found')
         return
     }
     res.status(200)
@@ -55,7 +55,7 @@ router.post('/', comprobadorToken, async (req, res) => {
         res.end(error.message)
         return
     }
-    console.log('hola')
+
     let newArticle
     try {
         newArticle = await articleRepository.postArticle({article, idUser: infoUser.id})
@@ -66,7 +66,7 @@ router.post('/', comprobadorToken, async (req, res) => {
     }
     if (!newArticle || !article) {
         res.status(404)
-        res.end('Entris not found')
+        res.end('articles not found')
         return
     }
     res.status(200)
@@ -77,11 +77,11 @@ router.post('/', comprobadorToken, async (req, res) => {
 router.delete('/:idArticle', comprobadorToken, async (req, res) => {
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
-    const {idArticle} = req.body
+    const idArticle = req.params.idArticle
     let articleDelete
 
     try {
-        userDelete = await articleRepository.removeArticle(idArticle)
+      articleDelete = await articleRepository.removeArticle(idArticle)
     } catch (error) {
         res.status(404)
         res.end(error.message)
