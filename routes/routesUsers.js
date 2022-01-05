@@ -282,6 +282,33 @@ router.get('/profile',comprobadorToken, async (req, res) => {
     res.send(user)
 })
 
+router.post('/idUserVotado/votes',comprobadorToken, async (req, res) => {
+    const {idVendedor, voto} = req.body
+
+    if (!idVendedor || !voto) {
+        res.status(400)
+        res.end('body incomplete')
+        return
+      }
+
+    let newVoto
+    try {
+        newVoto = await usersRepository.postVoto({voto, idVendedor})
+    } catch (error) {
+        res.status(501)
+        res.end(error.message)
+        return
+    }
+    if (!newVoto) {
+        res.status(404)
+        res.end('voto not add')
+        return
+      }
+
+      res.status(200)
+      res.end('users voted')
+})
+
 
 
 

@@ -1,5 +1,3 @@
-// const bcrypt = require('bcrypt')
-// const jwt = require('jsonwebtoken')
 const connection = require('./../repositorio/mysqlConnection')
 
 const getArticlesBySearch = async ({search = ''}) => {
@@ -47,27 +45,28 @@ const removeArticle = async (id) => {
 
 }
 
-const getArticleEnVenta = async (userId) => {
-        const articles =await  connection.query('select * from articulos where idUser = ? AND compradorId = NULL', [userId])
+const getArticleEnVenta = async ({userId}) => {
+        const articles =await  connection.query('select * from articulos WHERE idUser = ? AND compradorId is NULL', [userId])
+
+        if (!articles[0]) return false
+
         return articles[0]
 }
 
-const getArticlesBySearchComprados = async (userId) => {
-    const articles =await  connection.query('select * from articulos where compradorId = ?', [userId])
+const getArticlesBySearchComprados = async ({userId}) => {
+    const articles =await  connection.query('select * from articulos WHERE compradorId = ?', [userId])
+
+    if (!articles[0]) return false
+
     return articles[0]
 }
 
-const getArticlesBySearchVendidos = async (userId) => {
-    const articles =await  connection.query('select * from articulos where idUser = ? AND compradorId <> NULL', [userId])
+const getArticlesBySearchVendidos = async ({userId}) => {
+    const articles =await  connection.query('select * from articulos WHERE idUser = ? AND compradorId is not NULL', [userId])
+
+    if (!articles[0]) return false
+
     return articles[0]
-}
-
-const postVoto = async ({voto, idVendedor}) => {
-    const at = dateNow()
-
-    const articles = await connection.query('INSERT INTO user_votes SET ?', {vote: voto, idUserVotado: idVendedor, createdAt: at})
-    return articles[0]
-
 }
 
 
@@ -78,8 +77,7 @@ module.exports = {
     putArticlesById,
     getArticleEnVenta,
     getArticlesBySearchComprados,
-    getArticlesBySearchVendidos,
-    postVoto
+    getArticlesBySearchVendidos
 }
 
 

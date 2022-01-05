@@ -122,6 +122,13 @@ const getRecover = async ({email, code, newPassword}) => {
     return true
 }
 
+const postVoto = async ({voto, idVendedor}) => {
+
+    const articles = await connection.query('INSERT INTO user_votes SET ?', {vote: voto, idUserVotado: idVendedor, createdAt: new Date()})
+    return articles[0]
+
+}
+
 module.exports = {
     getUsers,
     getUserById,
@@ -132,5 +139,6 @@ module.exports = {
     editPath,
     removeUser,
     getRecover,
-    changePasswordEmail
+    changePasswordEmail,
+    postVoto
 }

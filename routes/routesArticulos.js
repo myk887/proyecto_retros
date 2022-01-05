@@ -103,47 +103,21 @@ router.delete('/:idArticle', comprobadorToken, async (req, res) => {
     res.end('article deleted')
   })
 
-router.post('/idUserVotado/votes',comprobadorToken, async (req, res) => {
-    const {idVendedor, voto} = req.body
-
-    if (!idVendedor || !voto) {
-        res.status(400)
-        res.end('body incomplete')
-        return
-      }
-
-    let newVoto
-    try {
-        newVoto = await usersRepository.postVoto({voto, idVendedor})
-    } catch (error) {
-        res.status(501)
-        res.end(error.message)
-        return
-    }
-    if (!newVoto) {
-        res.status(404)
-        res.end('voto not add')
-        return
-      }
-
-      res.status(200)
-      res.end('users voted')
-})
 
 router.get('/enVenta', comprobadorToken,  async (req, res) => {
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
 
   try {
-    const users = await usersRepository.getArticleEnVenta({ userId})
+    const articles = await articleRepository.getArticleEnVenta({ userId})
 
-    if (!article) {
+    if (!articles) {
       res.status(404)
       res.end('Users not found')
       return
     }
     res.status(200)
-    res.send(article)
+    res.send(articles)
 
   } catch (error) {
         res.status(501)
@@ -157,15 +131,15 @@ router.get('/comprados', comprobadorToken,  async (req, res) => {
     const userId = Number(infoUser.id)
 
   try {
-    const users = await usersRepository.getArticlesComprados({ userId })
+    const articles = await articleRepository.getArticlesComprados({ userId })
 
-    if (!users) {
+    if (!articles) {
       res.status(404)
       res.end('Users not found')
       return
     }
     res.status(200)
-    res.send(users)
+    res.send(articles)
 
   } catch (error) {
     res.status(501)
@@ -179,15 +153,15 @@ router.get('/vendidos', comprobadorToken, async (req, res) => {
     const userId = Number(infoUser.id)
 
   try {
-    const users = await usersRepository.getArticlesVendidos({ userId})
+    const articles = await articleRepository.getArticlesVendidos({ userId})
 
-    if (!users) {
+    if (!articles) {
       res.status(404)
       res.end('Users not found')
       return
     }
     res.status(200)
-    res.send(users)
+    res.send(articles)
 
   } catch (error) {
     res.status(501)
