@@ -8,8 +8,8 @@ const loginSchema = require('./../schemas/loginUsers')
 const usersSchema = require('./../schemas/users')
 const passwordSchema = require('./../schemas/passwordSchema')
 const tokenVerifier = require('./../helpers/tokenVerifier')
-const cryptoPassword = require('./../helpers/cryptoPassword')
-const generateRegistrationCode = require('./../helpers/generateRegistrationCode')
+const encodingBcryptPassword = require('../helpers/encodingBcryptPassword')
+const generateCrytoCode = require('../helpers/generateCrytoCode')
 const { accountConfirmationEmail, accountRecoverCodeEmail } = require('./../notificationEmail/emailSender')
 
 const app = express()
@@ -27,13 +27,13 @@ router.post('/',  async (req, res) => {
          res.end(error.message)
          return
     }
-    const codeRegistration = generateRegistrationCode()
+    const codeRegistration = generateCrytoCode()
     let newUser
     try {
         newUser = await usersRepository.postUsers({
             ...user,
             registrationCode: codeRegistration,
-            password: await cryptoPassword(user.password)
+            password: await encodingBcryptPassword(user.password)
         })
     } catch (error) {
         res.status(500)
@@ -155,7 +155,7 @@ router.patch('/change/password',tokenVerifier, async (req, res) => {
     const {passwordActually, passwordNew} = req.body
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
-    const passwordToChange = await cryptoPassword(passwordNew)
+    const passwordToChange = await encodingBcryptPassword(passwordNew)
 
     try {
         await passwordSchema.validateAsync({password: passwordNew})
@@ -191,7 +191,7 @@ router.patch('/change/password',tokenVerifier, async (req, res) => {
 
 router.put('/reset-password', async (req, res) => {
     const {email} = req.body
-    const codeRecover = generateRegistrationCode()
+    const codeRecover = generateCrytoCode()
 
     try {
         const result = await usersRepository.changePasswordEmail({email , code: codeRecover})
@@ -224,7 +224,7 @@ router.get('/recover/:registrationCode', async (req, res) => {
             res.end(error.message)
             return
     }
-    const newPassword =  await cryptoPassword(password)
+    const newPassword =  await encodingBcryptPassword(password)
 
     let result
     try {
