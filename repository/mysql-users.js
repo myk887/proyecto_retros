@@ -24,11 +24,9 @@ const getUserById = async (idUser) => {
 
 const postUsers = async (user) => {
     let result
-    try {
+
         [result] = await connection.query('INSERT INTO users SET ?', {email: user.email, password: user.password, username: user.username, avatar: user.avatar, active: false, deleted: false, registrationCode: user.registrationCode, recoverCode: null, createdAt: new Date(), modifiedAt: new Date()})
-    } catch (error) {
-        console.log(error.message)
-    }
+
     if (!result.affectedRows) return false
 
     return {id: result.insertId, username: user.username, email: user.email, avatar: user.avatar}

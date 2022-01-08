@@ -5,7 +5,6 @@ const getArticlesBySearch = async ({search = ''}) => {
         const articles = await connection.query("select * from articles WHERE name like ? ", [`%${search}%`])
 
         return articles[0]
-
 }
 
 
@@ -46,7 +45,7 @@ const removeArticle = async (id) => {
 }
 
 const getArticleOnSales = async ({userId}) => {
-        const articles =await  connection.query('select * from articles WHERE idUser = ? AND buyerId is NULL', [userId])
+        const articles = await  connection.query('select * from articles WHERE idUser = ? AND buyerId is NULL', [userId])
 
         if (!articles[0]) return false
 
@@ -54,7 +53,7 @@ const getArticleOnSales = async ({userId}) => {
 }
 
 const getArticlesPurchased = async ({userId}) => {
-    const articles =await  connection.query('select * from articles WHERE buyerId = ?', [userId])
+    const articles = await  connection.query('select * from articles WHERE buyerId = ?', [userId])
 
     if (!articles[0]) return false
 
@@ -62,7 +61,16 @@ const getArticlesPurchased = async ({userId}) => {
 }
 
 const getArticleSold = async ({userId}) => {
-    const articles =await  connection.query('select * from articles WHERE idUser = ? AND buyerId is not NULL', [userId])
+    const articles = await  connection.query('select * from articles WHERE idUser = ? AND buyerId is not NULL', [userId])
+
+    if (!articles[0]) return false
+
+    return articles[0]
+}
+
+
+const postArticleSold = async ({userId, articleId}) => {
+    const articles = await connection.query('UPDATE articles SET buyerId = ? WHERE id = ?', [userId, articleId])
 
     if (!articles[0]) return false
 
@@ -77,7 +85,8 @@ module.exports = {
     putArticlesById,
     getArticleOnSales,
     getArticlesPurchased,
-    getArticleSold
+    getArticleSold,
+    postArticleSold
 }
 
 

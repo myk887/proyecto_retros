@@ -38,7 +38,7 @@ router.put('/:idArticle', tokenVerifier, async (req, res) => {
     }
     if (!newArticle) {
         res.status(404)
-        res.end('articles not found')
+        res.end('Articles not found')
         return
     }
     res.status(200)
@@ -46,6 +46,8 @@ router.put('/:idArticle', tokenVerifier, async (req, res) => {
 })
 
 router.post('/', tokenVerifier, async (req, res) => {
+      // const newPhoto = photoStorage(req.files.photo)
+    // const article = {...req.body, photo: newPhoto}
     const infoUser = req.user.user
     const article = req.body
     try {
@@ -66,7 +68,7 @@ router.post('/', tokenVerifier, async (req, res) => {
     }
     if (!newArticle || !article) {
         res.status(404)
-        res.end('articles not found')
+        res.end('Articles not found')
         return
     }
     res.status(200)
@@ -95,13 +97,36 @@ router.delete('/:idArticle', tokenVerifier, async (req, res) => {
     }
     if (!articleDelete) {
       res.status(404)
-      res.end('Article not exits')
+      res.end('Article does not exist')
       return
     }
 
     res.status(200)
     res.end('Article deleted')
   })
+
+router.post('/sold', tokenVerifier,  async (req, res) => {
+    const infoUser = req.user.user
+    const userId = Number(infoUser.id)
+    const articleId = req.body.articleId
+
+  try {
+    const articles = await articleRepository.postArticleSold({ userId, articleId})
+
+    if (!articles) {
+      res.status(404)
+      res.end('User not found')
+      return
+    }
+    res.status(200)
+    res.send(articles)
+
+  } catch (error) {
+        res.status(500)
+        res.end(error.message)
+        return
+  }
+})
 
 
 router.get('/onSales', tokenVerifier,  async (req, res) => {
@@ -113,7 +138,7 @@ router.get('/onSales', tokenVerifier,  async (req, res) => {
 
     if (!articles) {
       res.status(404)
-      res.end('Users not found')
+      res.end('User not found')
       return
     }
     res.status(200)

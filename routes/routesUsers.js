@@ -9,8 +9,9 @@ const usersSchema = require('./../schemas/users')
 const passwordSchema = require('./../schemas/passwordSchema')
 const tokenVerifier = require('./../helpers/tokenVerifier')
 const encodingBcryptPassword = require('../helpers/encodingBcryptPassword')
-const generateCrytoCode = require('../helpers/generateCrytoCode')
+const generateCrytoCode = require('../helpers/generateCryptoCode')
 const { accountConfirmationEmail, accountRecoverCodeEmail } = require('./../notificationEmail/emailSender')
+const photoStorage = require('../helpers/photoStorage')
 
 const app = express()
 app.use(express.json())
@@ -18,6 +19,8 @@ app.use(express.json())
 const { JWT_PRIVATE_KEY} = process.env
 
 router.post('/',  async (req, res) => {
+    // const newAvatar = photoStorage(req.files.avatar)
+    // const user = {...req.body, avatar: newAvatar}
     const user = req.body
 
     try {
@@ -47,7 +50,7 @@ router.post('/',  async (req, res) => {
         return
     }
     try {
-         await accountRecoverCodeEmail({ sendTo: newUser.email, code: codeRegistration})
+         await accountConfirmationEmail({ sendTo: newUser.email, code: codeRegistration})
 
     } catch (error) {
         res.status(500)
@@ -101,12 +104,12 @@ router.post('/login', async (req, res) => {
     }
     if (!newUser) {
         res.status(401)
-        res.end('ERROR, verify email')
+        res.end('ERROR, please verify email')
         return
     }
     if (!newUser.active) {
         res.status(404)
-        res.end('ERROR, not verify email')
+        res.end('ERROR, email not verified')
         return
     }
     try {
@@ -182,11 +185,11 @@ router.patch('/change/password',tokenVerifier, async (req, res) => {
 
     if (!newUser) {
         res.status(404)
-        res.end('not change password')
+        res.end('Password not changed')
     }
 
     res.status(200)
-    res.end('Sucesfull change')
+    res.end('Successfull change')
     })
 
 router.put('/reset-password', async (req, res) => {
@@ -198,14 +201,14 @@ router.put('/reset-password', async (req, res) => {
 
     if (!result) {
         res.status(404)
-        res.end('not change recoverCode because user not found')
+        res.end('Recover code cannot be changed. User not found')
         return
     }
 
     accountConfirmationEmail({ sendTo: email, code: codeRecover})
 
     res.status(200)
-    res.end('Email send')
+    res.end('Email sent')
 
     } catch (error) {
         res.status(500)
@@ -244,7 +247,7 @@ router.get('/recover/:registrationCode', async (req, res) => {
 })
 
 
-router.delete('/proflie', tokenVerifier, async (req, res) => {
+router.delete('/profile', tokenVerifier, async (req, res) => {
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
     let userDelete
@@ -263,7 +266,7 @@ router.delete('/proflie', tokenVerifier, async (req, res) => {
     }
     if (!userDelete) {
         res.status(404)
-        res.end('User not exits')
+        res.end('User does not exist')
     }
 
     res.status(200)
@@ -287,7 +290,7 @@ router.post('/idVotedUser/votes',tokenVerifier, async (req, res) => {
 
     if (!idSeller || !vote) {
         res.status(404)
-        res.end('body incomplete')
+        res.end('incomplete body')
         return
       }
 
@@ -301,12 +304,12 @@ router.post('/idVotedUser/votes',tokenVerifier, async (req, res) => {
     }
     if (!newVote) {
         res.status(404)
-        res.end('vote not add')
+        res.end('vote not added')
         return
       }
 
       res.status(200)
-      res.end('users voted')
+      res.end('user voted')
 })
 
 
