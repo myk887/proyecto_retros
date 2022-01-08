@@ -27,6 +27,7 @@ router.post('/',  async (req, res) => {
         await usersSchema.validateAsync(user)
     } catch (error) {
          res.status(404)
+         console.log(newUser.email, codeRegistration)
          res.end(error.message)
          return
     }
@@ -205,7 +206,7 @@ router.put('/reset-password', async (req, res) => {
         return
     }
 
-    accountConfirmationEmail({ sendTo: email, code: codeRecover})
+    accountRecoverCodeEmail({ sendTo: email, code: codeRecover})
 
     res.status(200)
     res.end('Email sent')
