@@ -7,6 +7,12 @@ const getArticlesBySearch = async ({search = ''}) => {
         return articles[0]
 }
 
+const getArticlesByCategory = async ({search = '', category}) => {
+
+    const articles = await connection.query("select * from articles WHERE name like ? AND category = ?", [`%${search}%`, category])
+
+    return articles[0]
+}
 
 const postArticle = async ({article, idUser}) => {
         const articles = await connection.query('INSERT INTO articles SET ?', {name: article.name, price: article.price, description: article.description, photo: article.photo, category: article.category, idUser: idUser, createdAt: new Date(), modifiedAt: null})
@@ -80,6 +86,7 @@ const postArticleSold = async ({userId, articleId}) => {
 
 module.exports = {
     getArticlesBySearch,
+    getArticlesByCategory,
     postArticle,
     removeArticle,
     putArticlesById,

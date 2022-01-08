@@ -24,6 +24,25 @@ router.get('/', async (req, res) => {
     res.send(articles)
 })
 
+router.get('/category', async (req, res) => {
+  const {search, category} = req.query
+  let articles
+  try {
+      articles = await articleRepository.getArticlesByCategory({search, category})
+  } catch (error) {
+  res.status(500)
+  res.end(error.message)
+  return
+  }
+  if (!articles.length) {
+      res.status(404)
+      res.end('Articles not found')
+      return
+  }
+  res.status(200)
+  res.send(articles)
+})
+
 
 router.put('/:idArticle', tokenVerifier, async (req, res) => {
     const articleId = req.params.idArticle
