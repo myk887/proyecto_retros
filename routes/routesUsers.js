@@ -293,7 +293,6 @@ router.get('/profile',tokenVerifier, async (req, res) => {
 })
 
 router.post('/avatar', tokenVerifier, async (req, res) => {
-    console.log(req)
     let newAvatar
     try {
       newAvatar = storageAvatarUser(req.files.avatar)
