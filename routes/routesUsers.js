@@ -303,15 +303,15 @@ router.post('/avatar', tokenVerifier, async (req, res) => {
       return
   }
   
-    let newAvatar
+    let newUserAvatar
     try {
-      newAvatar = await usersRepository.postUserAvatar({avatar: userAvatar, id: infoUser.id})
+      newUserAvatar = await usersRepository.postUserAvatar({avatar: userAvatar, id: infoUser.id})
     } catch (error) {
         res.status(500)
         res.end(error.message)
         return
     }
-    if (!newAvatar) {
+    if (!newUserAvatar) {
         res.status(404)
         res.end('User not found')
         return
