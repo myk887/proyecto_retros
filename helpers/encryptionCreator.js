@@ -1,9 +1,8 @@
 const crypto = require('crypto')
 
-const generateCrytoCode = () => {
+const encryptionCreator = () => {
   return crypto.randomBytes(40).toString('hex')
 }
 
 
-
-module.exports = generateCrytoCode
+module.exports = encryptionCreator

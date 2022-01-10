@@ -8,10 +8,11 @@ const loginSchema = require('./../schemas/loginUsers')
 const usersSchema = require('./../schemas/users')
 const passwordSchema = require('./../schemas/passwordSchema')
 const tokenVerifier = require('./../helpers/tokenVerifier')
-const encodingBcryptPassword = require('../helpers/encodingBcryptPassword')
-const generateCrytoCode = require('../helpers/generateCryptoCode')
-const { accountConfirmationEmail, accountRecoverCodeEmail } = require('./../notificationEmail/emailSender')
-const photoStorage = require('../helpers/photoStorage')
+const encryptPassword = require('../helpers/encryptPassword')
+const passwordVerifier = require('./../helpers/passwordVerifier')
+const encryptionCreator = require('../helpers/encryptionCreator')
+const {accountConfirmationEmail, accountRecoverCodeEmail} = require('./../notificationEmail/emailSender')
+const {storageAvatarUser} = require('./../helpers/photoStorage')
 
 const app = express()
 app.use(express.json())
@@ -19,7 +20,7 @@ app.use(express.json())
 const { JWT_PRIVATE_KEY} = process.env
 
 router.post('/',  async (req, res) => {
-    // const newAvatar = photoStorage(req.files.avatar)
+    // const newAvatar = storageAvatarUser(req.files.avatar)
     // const user = {...req.body, avatar: newAvatar}
     const user = req.body
 
@@ -31,13 +32,14 @@ router.post('/',  async (req, res) => {
          res.end(error.message)
          return
     }
-    const codeRegistration = generateCrytoCode()
+
+    const codeRegistration = encryptionCreator()
     let newUser
     try {
         newUser = await usersRepository.postUsers({
             ...user,
             registrationCode: codeRegistration,
-            password: await encodingBcryptPassword(user.password)
+            password: await encryptPassword(user.password)
         })
     } catch (error) {
         res.status(500)
@@ -50,6 +52,7 @@ router.post('/',  async (req, res) => {
         res.end('Users not found')
         return
     }
+
     try {
          await accountConfirmationEmail({ sendTo: newUser.email, code: codeRegistration})
 
@@ -69,7 +72,7 @@ router.get('/validate/:registrationCode', async (req, res) => {
 
     let result
     try {
-        result = await usersRepository.getValidate(code)
+        result = await usersRepository.getUserByRegistrationCode(code)
     } catch (error) {
         res.status(500)
         res.end(error.message)
@@ -114,7 +117,7 @@ router.post('/login', async (req, res) => {
         return
     }
     try {
-        if (!await bcrypt.compare(user.password, newUser.mysqlPassword)) {
+        if (!await passwordVerifier({password: user.password, mysqlPassword: newUser.mysqlPassword})) {
             res.status(403)
             res.end('Invalid credentials')
             return
@@ -159,7 +162,7 @@ router.patch('/change/password',tokenVerifier, async (req, res) => {
     const {currentPassword, passwordNew} = req.body
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
-    const passwordToChange = await encodingBcryptPassword(passwordNew)
+    const passwordToChange = await encryptPassword(passwordNew)
 
     try {
         await passwordSchema.validateAsync({password: passwordNew})
@@ -177,7 +180,7 @@ router.patch('/change/password',tokenVerifier, async (req, res) => {
 
     let newUser
     try {
-            newUser = await usersRepository.editPath ({id: userId, currentPassword, passwordToChange })
+            newUser = await usersRepository.editPatch ({id: userId, currentPassword, passwordToChange })
     } catch (error) {
         res.status(500)
         res.end(error.message)
@@ -195,7 +198,7 @@ router.patch('/change/password',tokenVerifier, async (req, res) => {
 
 router.put('/reset-password', async (req, res) => {
     const {email} = req.body
-    const codeRecover = generateCrytoCode()
+    const codeRecover = encryptionCreator()
 
     try {
         const result = await usersRepository.changePasswordEmail({email , code: codeRecover})
@@ -228,7 +231,7 @@ router.get('/recover/:registrationCode', async (req, res) => {
             res.end(error.message)
             return
     }
-    const newPassword =  await encodingBcryptPassword(password)
+    const newPassword =  await encryptPassword(password)
 
     let result
     try {
@@ -261,10 +264,6 @@ router.delete('/profile', tokenVerifier, async (req, res) => {
         return
     }
 
-    if (!userId) {
-        res.status(404)
-        res.end('ERROR, invalid token')
-    }
     if (!userDelete) {
         res.status(404)
         res.end('User does not exist')
@@ -286,32 +285,40 @@ router.get('/profile',tokenVerifier, async (req, res) => {
     res.send(user)
 })
 
-router.post('/idVotedUser/votes',tokenVerifier, async (req, res) => {
-    const {idSeller, vote} = req.body
-
-    if (!idSeller || !vote) {
-        res.status(404)
-        res.end('incomplete body')
-        return
-      }
-
-    let newVote
+router.post('/avatar', tokenVerifier, async (req, res) => {
+    let newAvatar
     try {
-        newVote = await usersRepository.postVote({vote, idSeller})
+      newAvatar = storageAvatarUser(req.files.Avatar)
     } catch (error) {
         res.status(500)
         res.end(error.message)
         return
     }
-    if (!newVote) {
-        res.status(404)
-        res.end('vote not added')
+    const userAvatar = {Avatar: newAvatar}
+    const infoUser = req.user.user
+  
+    if (!userAvatar ) {
+      res.status(404)
+      res.end('Error to user Avatar')
+      return
+  }
+  
+    let newAvatar
+    try {
+      newAvatar = await usersRepository.postUserAvatar({avatar: userAvatar, id: infoUser.id})
+    } catch (error) {
+        res.status(500)
+        res.end(error.message)
         return
-      }
-
-      res.status(200)
-      res.end('user voted')
-})
+    }
+    if (!newAvatar) {
+        res.status(404)
+        res.end('User not found')
+        return
+    }
+    res.status(200)
+    res.send(true)
+  })
 
 
 

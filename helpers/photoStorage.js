@@ -1,6 +1,6 @@
 const express = require('express')
 const fileUpload = require('express-fileupload')
-const crypto = require('crypto')
+const encryptionCreator = require('./encryptionCreator')
 
 const app = express()
 
@@ -8,14 +8,16 @@ app.use(fileUpload())
 
 app.use('/uploads', express.static('uploads'))
 
-const codeAvatar = () => {
-  return crypto.randomBytes(40).toString('hex')
+const storageAvatarUser = async (avatar) => {
+
+  await avatar.mv(`./../uploads/userAvatarUploads/${encryptionCreator()}.png`)
+  return `./uploads/${encryptionCreator()}.png`
 }
 
-const photoStorage = async (avatar) => {
+const storagePhotoArticle = async (photo) => {
 
-        await avatar.mv(`./../uploads/${codeAvatar()}.png`)
-        return './uploads/avatar.png'
+  await avatar.mv(`./../uploads/articlePhotoUploads/${encryptionCreator()}.png`)
+  return `./uploads/${encryptionCreator()}.png`
 }
 
-module.exports = photoStorage
+module.exports = {storageAvatarUser, storagePhotoArticle}

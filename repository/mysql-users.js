@@ -1,23 +1,20 @@
-const bcrypt = require('bcrypt')
+// const bcrypt = require('bcrypt')
 const connection = require('./../repository/mysqlConnection')
-const encodingBcryptPassword = require('../helpers/encodingBcryptPassword')
+const encryptPassword = require('../helpers/encryptPassword')
+const passwordVerifier = require('./../helpers/passwordVerifier')
 
 const getUsers = async () => {
-    try {
+
         const users = await connection.query('select * from users')
         return users[0]
-    } catch (error) {
-        console.log(error.message)
-    }
+
 }
 
 const getUserById = async (idUser) => {
-    try {
+
         const users = await  connection.query('select * from users where id = ?', [idUser])
         return users[0]
-    } catch (error) {
-        console.log(error.message)
-    }
+
 }
 
 
@@ -43,7 +40,7 @@ const postLogin = async (user) => {
     return {mysqlPassword, userId, active}
 }
 
-const getValidate = async (code) => {
+const getUserByRegistrationCode = async (code) => {
 
     const user = await  connection.query('select * from users where registrationCode = ?', [code])
     const findedUser = user[0][0]
@@ -62,7 +59,7 @@ const editUser = async ({user, id}) => {
       if (result[0].affectedRows === 0) modific += 1
       result = await connection.query('UPDATE users SET email = ? WHERE id = ?', [user.email, id])
       if (result[0].affectedRows === 0) modific += 1
-      result = await connection.query('UPDATE users SET password = ? WHERE id = ?', [await encodingBcryptPassword(user.password), id])
+      result = await connection.query('UPDATE users SET password = ? WHERE id = ?', [await encryptPassword(user.password), id])
       result = await connection.query('UPDATE users SET avatar = ? WHERE id = ?', [user.avatar, id])
       if (result[0].affectedRows === 0) modific += 1
 
@@ -71,11 +68,11 @@ const editUser = async ({user, id}) => {
       return true
 }
 
-const editPath = async ({id, currentPassword, passwordToChange }) => {
+const editPatch = async ({id, currentPassword, passwordToChange }) => {
 
     const result = await  connection.query('select password from users where id = ?', [id])
- console.log(currentPassword, result[0][0].password)
-    if (!await bcrypt.compare(currentPassword, result[0][0].password)) return
+
+    if (!await passwordVerifier({password: currentPassword, mysqlPassword: result[0][0].password})) return
 
      const result2 = await connection.query('UPDATE users SET password = ? WHERE id = ?', [ passwordToChange, id])
 
@@ -114,9 +111,9 @@ const getRecover = async ({email, code, newPassword}) => {
     return true
 }
 
-const postVote = async ({vote, idSeller}) => {
+const postUserAvatar = async ({avatar, id}) => {
 
-    const articles = await connection.query('INSERT INTO user_votes SET ?', {vote: vote, idVotedUser: idSeller, createdAt: new Date()})
+    const articles = await connection.query('INSERT INTO users SET ? WHERE id = ?', {avatar: avatar, id: id})
     return articles[0]
 
 }
@@ -126,11 +123,11 @@ module.exports = {
     getUserById,
     postUsers,
     postLogin,
-    getValidate,
+    getUserByRegistrationCode,
     editUser,
-    editPath,
+    editPatch,
     removeUser,
     getRecover,
     changePasswordEmail,
-    postVote
+    postUserAvatar
 }

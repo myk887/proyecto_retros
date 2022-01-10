@@ -2,6 +2,7 @@ const router = require('express').Router()
 const articleSchema = require('../schemas/articles')
 const tokenVerifier = require('../helpers/tokenVerifier')
 const articleRepository = require('../repository/mysql-articles')
+const {storagePhotoArticle} = require('./../helpers/photoStorage')
 
 
 
@@ -9,7 +10,7 @@ router.get('/', async (req, res) => {
     const {search} = req.query
     let articles
     try {
-        articles = await articleRepository.getArticlesBySearch({search})
+        articles = await articleRepository.searchArticlesByName({search})
     } catch (error) {
     res.status(500)
     res.end(error.message)
@@ -85,7 +86,7 @@ router.post('/', tokenVerifier, async (req, res) => {
         res.end(error.message)
         return
     }
-    if (!newArticle || !article) {
+    if (!newArticle) {
         res.status(404)
         res.end('Articles not found')
         return
@@ -101,19 +102,20 @@ router.delete('/:idArticle', tokenVerifier, async (req, res) => {
     const idArticle = req.params.idArticle
     let articleDelete
 
+    if (!idArticle) {
+      res.status(404)
+      res.end('Error in idArticle')
+      return
+    }
+
     try {
-      articleDelete = await articleRepository.removeArticle(idArticle)
+      articleDelete = await articleRepository.removeArticle({idArticle, userId})
     } catch (error) {
         res.status(500)
         res.end(error.message)
         return
     }
 
-    if (!userId) {
-      res.status(404)
-      res.end('User not found')
-      return
-    }
     if (!articleDelete) {
       res.status(404)
       res.end('Article does not exist')
@@ -128,6 +130,12 @@ router.post('/sold', tokenVerifier,  async (req, res) => {
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
     const articleId = req.body.articleId
+
+  if (!articleId) {
+    res.status(404)
+    res.end('Error in body')
+    return
+  }
 
   try {
     const articles = await articleRepository.postArticleSold({ userId, articleId})
@@ -214,6 +222,42 @@ router.get('/sold', tokenVerifier, async (req, res) => {
   }
 })
 
+
+// router.post('/photo', tokenVerifier, async (req, res) => {
+//   let newPhoto
+//   try {
+//     newPhoto = storagePhotoArticle(req.files.photo)
+//   } catch (error) {
+//       res.status(500)
+//       res.end(error.message)
+//       return
+//   }
+//   const articlePhoto = {photo: newPhoto}
+//   const infoUser = req.user.user
+//   const idArticle = req.body
+
+//   if (!articlePhoto ) {
+//     res.status(404)
+//     res.end('Error to article photo')
+//     return
+// }
+
+//   let newArticlePhoto
+//   try {
+//     newArticlePhoto = await articleRepository.postArticlePhoto({articlePhoto, idArticle})
+//   } catch (error) {
+//       res.status(500)
+//       res.end(error.message)
+//       return
+//   }
+//   if (!newArticlePhoto) {
+//       res.status(404)
+//       res.end('Articles not found')
+//       return
+//   }
+//   res.status(200)
+//   res.send(true)
+// })
 
 
 module.exports = router

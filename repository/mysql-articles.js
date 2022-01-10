@@ -1,6 +1,6 @@
 const connection = require('./mysqlConnection')
 
-const getArticlesBySearch = async ({search = ''}) => {
+const searchArticlesByName = async ({search = ''}) => {
 
         const articles = await connection.query("select * from articles WHERE name like ? ", [`%${search}%`])
 
@@ -20,9 +20,9 @@ const postArticle = async ({article, idUser}) => {
 
 }
 
-const removeArticle = async (id) => {
+const removeArticle = async ({idArticle, userId}) => {
 
-    const result = await  connection.query('DELETE FROM articles WHERE id = ?', [id])
+    const result = await  connection.query('DELETE FROM articles WHERE id = ? AND idUser = ?', [idArticle, userId])
 
     if (result[0].affectedRows === 0) return
 
@@ -83,9 +83,17 @@ const postArticleSold = async ({userId, articleId}) => {
     return articles[0]
 }
 
+const postArticlePhoto = async ({articlePhoto, idArticle}) => {
+    const articles = await connection.query('UPDATE articles SET photo = ? WHERE id = ?', [articlePhoto, idArticle])
+
+    if (!articles[0]) return false
+
+    return articles[0]
+}
+
 
 module.exports = {
-    getArticlesBySearch,
+    searchArticlesByName,
     getArticlesByCategory,
     postArticle,
     removeArticle,
@@ -93,7 +101,8 @@ module.exports = {
     getArticleOnSales,
     getArticlesPurchased,
     getArticleSold,
-    postArticleSold
+    postArticleSold,
+    postArticlePhoto
 }
 
 

@@ -3,7 +3,7 @@ const express = require('express')
 const {PORT, BASE_URL} = process.env
 // const routesUsers = require('./routes/routesUsers')
 // const routesArticles = require('./routes/routesArticles')
-const {routesArticles, routesUsers} = require('./routes')
+const {routesArticles, routesUsers, routesVotes} = require('./routes')
 
 
 const app = express()
@@ -12,10 +12,9 @@ app.use(express.json())
 
 app.use('/users', routesUsers)
 
-
-
 app.use('/articles', routesArticles)
 
+app.use('/votes', routesVotes)
 
 
 app.listen(PORT, () => {
