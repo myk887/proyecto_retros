@@ -7,6 +7,12 @@ const usersShema = Joi.object({
             'string.entry': '[email] is required',
             'any.required': '[email] is required'
     }),
+    location: Joi.string()
+        .required()
+        .messages({
+            'string.entry': '[location] is required',
+            'any.required': '[location] is required'
+    }),
     password: Joi.string()
         .required()
         .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))

@@ -22,11 +22,11 @@ const getUserById = async (idUser) => {
 const postUsers = async (user) => {
     let result
 
-        [result] = await connection.query('INSERT INTO users SET ?', {email: user.email, password: user.password, username: user.username, avatar: user.avatar, active: false, deleted: false, registrationCode: user.registrationCode, recoverCode: null, createdAt: new Date(), modifiedAt: new Date()})
+        [result] = await connection.query('INSERT INTO users SET ?', {email: user.email, password: user.password, username: user.username, location: user.location ,avatar: user.avatar, active: false, deleted: false, registrationCode: user.registrationCode, recoverCode: null, createdAt: new Date(), modifiedAt: new Date()})
 
     if (!result.affectedRows) return false
 
-    return {id: result.insertId, username: user.username, email: user.email, avatar: user.avatar}
+    return {id: result.insertId, username: user.username, email: user.email, location: user.location, avatar: user.avatar}
 }
 
 const postLogin = async (user) => {
@@ -60,10 +60,13 @@ const editUser = async ({user, id}) => {
       result = await connection.query('UPDATE users SET email = ? WHERE id = ?', [user.email, id])
       if (result[0].affectedRows === 0) modific += 1
       result = await connection.query('UPDATE users SET password = ? WHERE id = ?', [await encryptPassword(user.password), id])
+      if (result[0].affectedRows === 0) modific += 1
+      result = await connection.query('UPDATE users SET location = ? WHERE id = ?', [user.location, id])
+      if (result[0].affectedRows === 0) modific += 1
       result = await connection.query('UPDATE users SET avatar = ? WHERE id = ?', [user.avatar, id])
       if (result[0].affectedRows === 0) modific += 1
 
-      if (modific !== 0) return
+      if (modific === 0) return
 
       return true
 }
@@ -113,8 +116,8 @@ const getRecover = async ({email, code, newPassword}) => {
 
 const postUserAvatar = async ({avatar, id}) => {
 
-    const articles = await connection.query('INSERT INTO users SET ? WHERE id = ?', {avatar: avatar, id: id})
-    return articles[0]
+    const result = await connection.query('INSERT INTO users SET ? WHERE id = ?', {avatar: avatar, id: id})
+    return result[0]
 
 }
 

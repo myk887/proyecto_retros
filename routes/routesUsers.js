@@ -17,6 +17,12 @@ const {storageAvatarUser} = require('./../helpers/photoStorage')
 const app = express()
 app.use(express.json())
 
+const fileUpload = require('express-fileupload')
+
+app.use(fileUpload())
+
+app.use('/uploads', express.static('uploads'))
+
 const { JWT_PRIVATE_KEY} = process.env
 
 router.post('/',  async (req, res) => {
@@ -225,6 +231,7 @@ router.get('/recover/:registrationCode', async (req, res) => {
     const code = req.params.registrationCode
     const {email, password} = req.body
     try {
+        console.log(req.files)
         await passwordSchema.validateAsync({password})
     } catch (error) {
             res.status(400)
@@ -275,7 +282,7 @@ router.delete('/profile', tokenVerifier, async (req, res) => {
 
 router.get('/profile',tokenVerifier, async (req, res) => {
     const infoUser = req.user.user
-    const user = await usersRepository.getUserById(infoUser.id) //JWT
+    const user = await usersRepository.getUserById(infoUser.id) 
     if (!user) {
         res.status(404)
         res.end('Users not found')
@@ -286,9 +293,10 @@ router.get('/profile',tokenVerifier, async (req, res) => {
 })
 
 router.post('/avatar', tokenVerifier, async (req, res) => {
+    console.log(req)
     let newAvatar
     try {
-      newAvatar = storageAvatarUser(req.files.Avatar)
+      newAvatar = storageAvatarUser(req.files.avatar)
     } catch (error) {
         res.status(500)
         res.end(error.message)
