@@ -23,13 +23,13 @@ const entryShema = Joi.object({
     }),
     category: Joi.string()
         .required()
-        .min(10)
+        .min(3)
         .max(500)
         .messages({
             'string.entry': '[category] is required',
             'any.required': '[category] is required',
-            'string.min': '[category] should be between 10 and 500 characters',
-            'string.max': '[category] should be between 10 and 500 characters'
+            'string.min': '[category] should be between 3 and 500 characters',
+            'string.max': '[category] should be between 3 and 500 characters'
     }),
     photo: Joi.string()
         .required()
