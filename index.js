@@ -16,6 +16,11 @@ app.use('/articles', routesArticles)
 
 app.use('/votes', routesVotes)
 
+app.post('/uploads', (req,res) => {
+  console.log(req.files)
+  res.send(req.files.avatar)
+})
+
 
 app.listen(PORT, () => {
     console.log(`El servidor esta funcionando en ${BASE_URL}:${PORT}`)

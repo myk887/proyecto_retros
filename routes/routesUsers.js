@@ -34,7 +34,6 @@ router.post('/',  async (req, res) => {
         await usersSchema.validateAsync(user)
     } catch (error) {
          res.status(404)
-         console.log(newUser.email, codeRegistration)
          res.end(error.message)
          return
     }
