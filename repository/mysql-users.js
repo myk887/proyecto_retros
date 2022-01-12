@@ -53,20 +53,17 @@ const getUserByRegistrationCode = async (code) => {
 }
 
 const editUser = async ({user, id}) => {
+    let result
 
-      let modific = 0
-      let result = await connection.query('UPDATE users SET username = ? WHERE id = ?', [user.username, id])
-      if (result[0].affectedRows === 0) modific += 1
-      result = await connection.query('UPDATE users SET email = ? WHERE id = ?', [user.email, id])
-      if (result[0].affectedRows === 0) modific += 1
-      result = await connection.query('UPDATE users SET password = ? WHERE id = ?', [await encryptPassword(user.password), id])
-      if (result[0].affectedRows === 0) modific += 1
-      result = await connection.query('UPDATE users SET location = ? WHERE id = ?', [user.location, id])
-      if (result[0].affectedRows === 0) modific += 1
-      result = await connection.query('UPDATE users SET avatar = ? WHERE id = ?', [user.avatar, id])
-      if (result[0].affectedRows === 0) modific += 1
+      if (user.username) {result = await connection.query('UPDATE users SET username = ? WHERE id = ?', [user.username, id])}
 
-      if (modific === 0) return
+      if (user.email) {result = await connection.query('UPDATE users SET email = ? WHERE id = ?', [user.email, id])}
+
+      if (user.password) {result = await connection.query('UPDATE users SET password = ? WHERE id = ?', [await encryptPassword(user.password), id])}
+
+      if (user.location) {result = await connection.query('UPDATE users SET location = ? WHERE id = ?', [user.location, id])}
+
+      if (user.avatar) {result = await connection.query('UPDATE users SET avatar = ? WHERE id = ?', [user.avatar, id])}
 
       return true
 }
@@ -79,7 +76,7 @@ const editPatch = async ({id, currentPassword, passwordToChange }) => {
 
      const result2 = await connection.query('UPDATE users SET password = ? WHERE id = ?', [ passwordToChange, id])
 
-     if (result[0].affectedRows === 0 || result2[0].affectedRows === 0) return
+     if (!result[0].length || result2[0].affectedRows === 0) return
 
     return true
 }

@@ -1,8 +1,9 @@
 const bcrypt = require('bcrypt')
 
 const passwordVerifier = async ({password, mysqlPassword}) => {
-  await bcrypt.compare(password, mysqlPassword)
-  return true
+  const result = await bcrypt.compare(password, mysqlPassword)
+
+  return result
 }
 
 module.exports = passwordVerifier

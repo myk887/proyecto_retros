@@ -14,21 +14,25 @@ const encryptionCreator = require('../helpers/encryptionCreator')
 const {accountConfirmationEmail, accountRecoverCodeEmail} = require('./../notificationEmail/emailSender')
 const {storageAvatarUser} = require('./../helpers/photoStorage')
 
-const app = express()
-app.use(express.json())
-
-const fileUpload = require('express-fileupload')
-
-app.use(fileUpload())
-
-app.use('/uploads', express.static('uploads'))
 
 const { JWT_PRIVATE_KEY} = process.env
 
+const app = express()
+app.use('/uploads', express.static('uploads'))
+
 router.post('/',  async (req, res) => {
-    // const newAvatar = storageAvatarUser(req.files.avatar)
-    // const user = {...req.body, avatar: newAvatar}
-    const user = req.body
+    let newAvatar
+    console.log(req.files.avatar)
+    try {
+        newAvatar = await storageAvatarUser(req.files.avatar)
+    } catch (error) {
+        res.status(500)
+        res.end(error.message)
+        return
+    }
+
+    const userIncomplete = JSON.parse(req.body.user)
+    const user = {...userIncomplete, avatar: newAvatar}
 
     try {
         await usersSchema.validateAsync(user)
@@ -281,7 +285,7 @@ router.delete('/profile', tokenVerifier, async (req, res) => {
 
 router.get('/profile',tokenVerifier, async (req, res) => {
     const infoUser = req.user.user
-    const user = await usersRepository.getUserById(infoUser.id) 
+    const user = await usersRepository.getUserById(infoUser.id)
     if (!user) {
         res.status(404)
         res.end('Users not found')

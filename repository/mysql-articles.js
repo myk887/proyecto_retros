@@ -31,20 +31,16 @@ const removeArticle = async ({idArticle, userId}) => {
 
   const putArticlesById = async ({articleId, article}) => {
 
-        let modific = 0
         let result
-        if (article.name) {result = await connection.query('UPDATE articles SET name = ? WHERE id = ?', [article.name, articleId])
-        if (result[0].affectedRows === 0) modific += 1}
-        if (article.price) {result = await connection.query('UPDATE articles SET price = ? WHERE id = ?', [article.price, articleId])
-        if (result[0].affectedRows === 0) modific += 1}
-        if (article.description) {result = await connection.query('UPDATE articles SET description = ? WHERE id = ?', [article.description, articleId])
-        if (result[0].affectedRows === 0) modific += 1}
-        if (article.photo) {result = await connection.query('UPDATE articles SET photo = ? WHERE id = ?', [article.photo, articleId])
-        if (result[0].affectedRows === 0) modific += 1}
-        if (article.categoria) {result = await connection.query('UPDATE articles SET category = ? WHERE id = ?', [article.categoria, articleId])
-        if (result[0].affectedRows === 0) modific += 1}
+        if (article.name) {result = await connection.query('UPDATE articles SET name = ? WHERE id = ?', [article.name, articleId])}
 
-        if (modific === 5) return false
+        if (article.price) {result = await connection.query('UPDATE articles SET price = ? WHERE id = ?', [article.price, articleId])}
+
+        if (article.description) {result = await connection.query('UPDATE articles SET description = ? WHERE id = ?', [article.description, articleId])}
+
+        if (article.photo) {result = await connection.query('UPDATE articles SET photo = ? WHERE id = ?', [article.photo, articleId])}
+
+        if (article.categoria) {result = await connection.query('UPDATE articles SET category = ? WHERE id = ?', [article.categoria, articleId])}
 
         return true
 
