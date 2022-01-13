@@ -2,7 +2,7 @@ const router = require('express').Router()
 const articleSchema = require('../schemas/articles')
 const tokenVerifier = require('../helpers/tokenVerifier')
 const articleRepository = require('../repository/mysql-articles')
-const {storagePhotoArticle} = require('./../helpers/photoStorage')
+const {storagePhotoArticleByCategory} = require('./../helpers/photoStorage')
 
 
 
@@ -35,6 +35,25 @@ router.get('/category', async (req, res) => {
   res.end(error.message)
   return
   }
+  if (!articles) {
+      res.status(404)
+      res.end('Articles not found')
+      return
+  }
+  res.status(200)
+  res.send(articles)
+})
+
+router.get('/subcategory', async (req, res) => {
+  const {search, subcategory} = req.query
+  let articles
+  try {
+      articles = await articleRepository.getArticlesBySubcategory({search, category: subcategory})
+  } catch (error) {
+  res.status(500)
+  res.end(error.message)
+  return
+  }
   if (!articles.length) {
       res.status(404)
       res.end('Articles not found')
@@ -46,11 +65,22 @@ router.get('/category', async (req, res) => {
 
 
 router.put('/:idArticle', tokenVerifier, async (req, res) => {
+    let newPhoto
+    const articleIncomplete = JSON.parse(req.body.article)
+    try {
+        newPhoto = await storagePhotoArticleByCategory({photo: req.files.photo, category: articleIncomplete.category})
+    } catch (error) {
+        res.status(500)
+        res.end(error.message)
+        return
+    }
+
+    const article = {...articleIncomplete, photo: newPhoto}
     const articleId = req.params.idArticle
-    const article = req.body
+    const infoUser = req.user.user
     let newArticle
     try {
-        newArticle = await articleRepository.putArticlesById({articleId, article})
+        newArticle = await articleRepository.putArticlesById({articleId, article, idUser: infoUser.id})
     } catch (error) {
         res.status(500)
         res.end(error.message)
@@ -66,10 +96,18 @@ router.put('/:idArticle', tokenVerifier, async (req, res) => {
 })
 
 router.post('/', tokenVerifier, async (req, res) => {
-      // const newPhoto = photoStorage(req.files.photo)
-    // const article = {...req.body, photo: newPhoto}
+    let newPhoto
+    const articleIncomplete = JSON.parse(req.body.article)
+    try {
+        newPhoto = await storagePhotoArticleByCategory({photo: req.files.photo, category: articleIncomplete.category})
+    } catch (error) {
+        res.status(500)
+        res.end(error.message)
+        return
+    }
+
+    const article = {...articleIncomplete, photo: newPhoto}
     const infoUser = req.user.user
-    const article = req.body
     try {
        await articleSchema.validateAsync(article)
     } catch (error) {
@@ -226,7 +264,7 @@ router.get('/sold', tokenVerifier, async (req, res) => {
 // router.post('/photo', tokenVerifier, async (req, res) => {
 //   let newPhoto
 //   try {
-//     newPhoto = storagePhotoArticle(req.files.photo)
+//     newPhoto = storagePhotoArticleByCategory(req.files.photo)
 //   } catch (error) {
 //       res.status(500)
 //       res.end(error.message)

@@ -111,12 +111,12 @@ const getRecover = async ({email, code, newPassword}) => {
     return true
 }
 
-const postUserAvatar = async ({avatar, id}) => {
+// const postUserAvatar = async ({avatar, id}) => {
 
-    const result = await connection.query('INSERT INTO users SET ? WHERE id = ?', {avatar: avatar, id: id})
-    return result[0]
+//     const result = await connection.query('INSERT INTO users SET avatar = ? WHERE id = ?', {avatar: avatar, id: id})
+//     return result[0]
 
-}
+// }
 
 module.exports = {
     getUsers,
@@ -128,6 +128,5 @@ module.exports = {
     editPatch,
     removeUser,
     getRecover,
-    changePasswordEmail,
-    postUserAvatar
+    changePasswordEmail
 }

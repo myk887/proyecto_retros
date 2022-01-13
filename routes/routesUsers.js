@@ -22,7 +22,6 @@ app.use('/uploads', express.static('uploads'))
 
 router.post('/',  async (req, res) => {
     let newAvatar
-    console.log(req.files.avatar)
     try {
         newAvatar = await storageAvatarUser(req.files.avatar)
     } catch (error) {
@@ -148,15 +147,27 @@ router.post('/login', async (req, res) => {
 
 
 router.put('/editUser',tokenVerifier, async (req, res) => {
+    let newAvatar
+    try {
+        newAvatar = await storageAvatarUser(req.files.avatar)
+    } catch (error) {
+        res.status(500)
+        res.end(error.message)
+        return
+    }
+
+    const userIncomplete = JSON.parse(req.body.user)
+    const user = {...userIncomplete, avatar: newAvatar}
     try {
         const infoUser = req.user.user
-        const user = req.body
         const newUser = await usersRepository.editUser({user, id: infoUser.id})
 
         if (!user || !newUser) {
             res.status(400)
             res.end('Any change executed')
-        } else {
+        } else {const encryptPassword = require('./helpers/encryptPassword')
+
+
             res.status(200)
             res.send(newUser)
         }
@@ -295,40 +306,40 @@ router.get('/profile',tokenVerifier, async (req, res) => {
     res.send(user)
 })
 
-router.post('/avatar', tokenVerifier, async (req, res) => {
-    let newAvatar
-    try {
-      newAvatar = storageAvatarUser(req.files.avatar)
-    } catch (error) {
-        res.status(500)
-        res.end(error.message)
-        return
-    }
-    const userAvatar = {Avatar: newAvatar}
-    const infoUser = req.user.user
+// router.post('/avatar', tokenVerifier, async (req, res) => {
+//     let newAvatar
+//     try {
+//       newAvatar = storageAvatarUser(req.files.avatar)
+//     } catch (error) {
+//         res.status(500)
+//         res.end(error.message)
+//         return
+//     }
+//     const userAvatar = {Avatar: newAvatar}
+//     const infoUser = req.user.user
   
-    if (!userAvatar ) {
-      res.status(404)
-      res.end('Error to user Avatar')
-      return
-  }
+//     if (!userAvatar ) {
+//       res.status(404)
+//       res.end('Error to user Avatar')
+//       return
+//   }
   
-    let newUserAvatar
-    try {
-      newUserAvatar = await usersRepository.postUserAvatar({avatar: userAvatar, id: infoUser.id})
-    } catch (error) {
-        res.status(500)
-        res.end(error.message)
-        return
-    }
-    if (!newUserAvatar) {
-        res.status(404)
-        res.end('User not found')
-        return
-    }
-    res.status(200)
-    res.send(true)
-  })
+//     let newUserAvatar
+//     try {
+//       newUserAvatar = await usersRepository.postUserAvatar({avatar: userAvatar, id: infoUser.id})
+//     } catch (error) {
+//         res.status(500)
+//         res.end(error.message)
+//         return
+//     }
+//     if (!newUserAvatar) {
+//         res.status(404)
+//         res.end('User not found')
+//         return
+//     }
+//     res.status(200)
+//     res.send(true)
+//   })
 
 
 
