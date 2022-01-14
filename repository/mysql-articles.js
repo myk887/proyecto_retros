@@ -17,81 +17,39 @@ const getArticlesBySubcategory = async ({search = '', category}) => {
 const getArticlesByCategory = async ({search = '', category}) => {
 // AUDIO
   if(category === 'audio') {
-    const audiosArray = ['alatavoces', 'mp3', 'radios', 'tocadiscos', 'walkman']
-    const result = []
-    const busqueda = audiosArray.map( async (a) =>  {
-        const articles = await connection.query("select * from articles WHERE name like ? AND category = ?", [`%${search}%`, a])
-        result.push(articles[0])
-        return result
-      })
-      console.log(result)
-      return await busqueda[4]
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ? OR category = ? OR category = ? OR category = ?)", [`%${search}%`, 'alatavoces', 'mp3', 'radios', 'tocadiscos', 'walkman'])
+    return articles[0]
   }
   // ELECTRONICA
   if(category === 'electronica') {
-    const electronicaArray = ['cables', 'despertadores', 'gps', 'librosElectronicos', 'maquinasEscribir', 'tdt']
-    const result = []
-    const busqueda = electronicaArray.map( async (e) =>  {
-        const articles = await connection.query("select * from articles WHERE name like ? AND category = ?", [`%${search}%`, e])
-        result.push(articles[0])
-        return result
-    })
-    return await busqueda[5]
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ? OR category = ? OR category = ? OR category = ? OR category = ?)", [`%${search}%`, 'cables', 'despertadores', 'gps', 'librosElectronicos', 'maquinasEscribir', 'tdt'])
+    return articles[0]
   }
   // GAMING
   if(category === 'gaming') {
-    const gamingArray = ['cartuchos', 'consolas']
-    const result = []
-    const busqueda = gamingArray.map( async (g) =>  {
-        const articles = await connection.query("select * from articles WHERE name like ? AND category = ?", [`%${search}%`, g])
-        result.push(articles[0])
-        return result
-    })
-    return await busqueda[1]
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ?)", [`%${search}%`, 'cartuchos', 'consolas'])
+    return articles[0]
   }
   // IMAGEN
   if(category === 'imagen') {
-    const imageneArray = ['camaraFotos', 'camaraVideo', 'televisores']
-    const result = []
-    const busqueda = imageneArray.map( async (i) =>  {
-        const articles = await connection.query("select * from articles WHERE name like ? AND category = ?", [`%${search}%`, i])
-        result.push(articles[0])
-        return result
-      })
-      return await busqueda[2]
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ? OR category = ?)", [`%${search}%`, 'camaraFotos', 'camaraVideo', 'televisores'])
+    return articles[0]
   }
   // INFORMATICA
   if(category === 'informatica') {
-    const informaticaArray = ['accesorios', 'monitores', 'ordenadores', 'teclados']
-    const result = []
-    const busqueda = informaticaArray.map( async (i) =>  {
-        const articles = await connection.query("select * from articles WHERE name like ? AND category = ?", [`%${search}%`, i])
-        result.push(articles[0])
-        return result
-      })
-      return await busqueda[3]
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ? OR category = ? OR category = ?)", [`%${search}%`, 'accesorios', 'monitores', 'ordenadores', 'teclados'])
+    return articles[0]
   }
   // MUSICA
   if(category === 'musica') {
-      const musicaArray = ['cintas', 'vinilos']
-      const result = []
-      const busqueda = musicaArray.map( async (m) =>  {
-        const articles = await connection.query("select * from articles WHERE name like ? AND category = ?", [`%${search}%`, m])
-        result.push(articles[0])
-        return result
-      })
-      return await busqueda[1]
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ?)", [`%${search}%`, 'cintas', 'vinilos'])
+    return articles[0]
   }
   // TELEFONOS
   if(category === 'telefonos') {
-      const telefonosArray = ['fijos', 'moviles']
-      const busqueda = telefonosArray.map( async (t) =>  {
-        const result = []
-        const articles = await connection.query("select * from articles WHERE name like ? AND category = ?", [`%${search}%`, t])
-        result.push(articles[0])
-        return result
-      })
-      return await busqueda[1]
+
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ?)", [`%${search}%`, 'fijos', 'moviles'])
+    return articles[0]
   }
 }
 
