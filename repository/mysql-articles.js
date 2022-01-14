@@ -17,7 +17,7 @@ const getArticlesBySubcategory = async ({search = '', category}) => {
 const getArticlesByCategory = async ({search = '', category}) => {
 // AUDIO
   if(category === 'audio') {
-    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ? OR category = ? OR category = ? OR category = ?)", [`%${search}%`, 'alatavoces', 'mp3', 'radios', 'tocadiscos', 'walkman'])
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ? OR category = ? OR category = ? OR category = ?)", [`%${search}%`, 'altavoces', 'mp3', 'radios', 'tocadiscos', 'walkman'])
     return articles[0]
   }
   // ELECTRONICA
