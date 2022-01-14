@@ -67,13 +67,14 @@ router.get('/subcategory', async (req, res) => {
 router.put('/:idArticle', tokenVerifier, async (req, res) => {
     let newPhoto
     const articleIncomplete = JSON.parse(req.body.article)
-    try {
+    if(req.files) {
+      try {
         newPhoto = await storagePhotoArticleByCategory({photo: req.files.photo, category: articleIncomplete.category})
-    } catch (error) {
+      } catch (error) {
         res.status(500)
         res.end(error.message)
         return
-    }
+      }}
 
     const article = {...articleIncomplete, photo: newPhoto}
     const articleId = req.params.idArticle

@@ -73,9 +73,9 @@ const removeArticle = async ({idArticle, userId}) => {
         let result
         if (article.name) {result = await connection.query('UPDATE articles SET name = ? WHERE id = ? and idUser = ?', [article.name, articleId, idUser])}
 
-        if (article.price) {result = await connection.query('UPDATE articles SET price = ? WHERE id = ? and idUser = ?', [article.price, articleId, idUser])}
+        if (article.price) {result = await connection.query('UPDATE articles SET price = ? WHERE id = ? and idUser = ?', [article.price, articleId, idUser]), console.log(result[0])}
 
-        if (article.description) {result = await connection.query('UPDATE articles SET description = ? WHERE id = ? and idUser = ?', [article.description, articleId, idUser])}
+        if (article.description) {result = await connection.query('UPDATE articles SET description = ? WHERE id = ? and idUser = ?', [article.description, articleId, idUser]), console.log(result[0])}
 
         if (article.photo) {result = await connection.query('UPDATE articles SET photo = ? WHERE id = ? and idUser = ?', [article.photo, articleId, idUser])}
 

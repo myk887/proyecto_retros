@@ -148,16 +148,17 @@ router.post('/login', async (req, res) => {
 
 router.put('/editUser',tokenVerifier, async (req, res) => {
     let newAvatar
-    try {
+    if (!!req.files) {
+     try {
         newAvatar = await storageAvatarUser(req.files.avatar)
     } catch (error) {
         res.status(500)
         res.end(error.message)
         return
-    }
+    }}
 
     const userIncomplete = JSON.parse(req.body.user)
-    const user = {...userIncomplete, avatar: newAvatar}
+    const user = {...userIncomplete, avatar: newAvatar ? newAvatar : null}
     try {
         const infoUser = req.user.user
         const newUser = await usersRepository.editUser({user, id: infoUser.id})
@@ -165,7 +166,7 @@ router.put('/editUser',tokenVerifier, async (req, res) => {
         if (!user || !newUser) {
             res.status(400)
             res.end('Any change executed')
-        } else {const encryptPassword = require('./helpers/encryptPassword')
+        } else {
 
 
             res.status(200)

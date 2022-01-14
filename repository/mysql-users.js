@@ -1,6 +1,6 @@
 // const bcrypt = require('bcrypt')
 const connection = require('./../repository/mysqlConnection')
-const encryptPassword = require('../helpers/encryptPassword')
+const encryptPassword = require('./../helpers/encryptPassword')
 const passwordVerifier = require('./../helpers/passwordVerifier')
 
 const getUsers = async () => {
