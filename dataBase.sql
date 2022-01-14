@@ -33,7 +33,7 @@ INSERT INTO users (`email`,`password`,`username`,`avatar`,`createdAt`,`location`
 CREATE TABLE productos_retro.articles (
   id INT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(100) NOT NULL,
-  price DECIMAL(100,2) NOT NULL,
+  price DECIMAL(60,2) NOT NULL,
   description TEXT,
   photo VARCHAR(250),
   category VARCHAR(200) NOT NULL,

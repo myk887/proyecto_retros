@@ -72,14 +72,19 @@ const removeArticle = async ({idArticle, userId}) => {
 
         let result
         if (article.name) {result = await connection.query('UPDATE articles SET name = ? WHERE id = ? and idUser = ?', [article.name, articleId, idUser])}
+        if (article.name) {if(!result[0].affectedRows) return}
 
         if (article.price) {result = await connection.query('UPDATE articles SET price = ? WHERE id = ? and idUser = ?', [article.price, articleId, idUser]), console.log(result[0])}
+        if (article.price) {if(!result[0].affectedRows) return}
 
         if (article.description) {result = await connection.query('UPDATE articles SET description = ? WHERE id = ? and idUser = ?', [article.description, articleId, idUser]), console.log(result[0])}
+        if (article.description) {if(!result[0].affectedRows) return}
 
         if (article.photo) {result = await connection.query('UPDATE articles SET photo = ? WHERE id = ? and idUser = ?', [article.photo, articleId, idUser])}
+        if (article.photo) {if(!result[0].affectedRows) return}
 
-        if (article.categoria) {result = await connection.query('UPDATE articles SET category = ? WHERE id = ? and idUser = ?', [article.categoria, articleId, idUser])}
+        if (article.category) {result = await connection.query('UPDATE articles SET category = ? WHERE id = ? and idUser = ?', [article.category, articleId, idUser])}
+        if (article.category) {if(!result[0].affectedRows) return}
 
         return true
 

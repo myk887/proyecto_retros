@@ -131,7 +131,7 @@ router.post('/', tokenVerifier, async (req, res) => {
         return
     }
     res.status(200)
-    res.send(true)
+    res.send({id: newArticle.insertId})
 })
 
 
