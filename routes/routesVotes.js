@@ -7,7 +7,7 @@ const votesSchema = require('./../schemas/votesSchema')
 
 
 router.post('/idVotedUser/votes',tokenVerifier, async (req, res) => {
-    const {idSeller, vote} = req.body
+    const {idSeller, vote, articleId} = req.body
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
 
@@ -32,7 +32,7 @@ router.post('/idVotedUser/votes',tokenVerifier, async (req, res) => {
     }
     let newVote
     try {
-        newVote = await votesRepository.postVote({vote, idSeller, idUser: userId})
+        newVote = await votesRepository.postVote({vote, idSeller, idUser: userId, articleId})
     } catch (error) {
         res.status(500)
         res.end(error.message)
