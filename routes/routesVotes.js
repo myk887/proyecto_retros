@@ -30,10 +30,9 @@ router.post('/idVotedUser/votes',tokenVerifier, async (req, res) => {
         res.end('idSeller === userId')
         return
     }
-
     let newVote
     try {
-        newVote = await votesRepository.postVote({vote, idSeller})
+        newVote = await votesRepository.postVote({vote, idSeller, idUser: userId})
     } catch (error) {
         res.status(500)
         res.end(error.message)
