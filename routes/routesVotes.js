@@ -2,17 +2,34 @@ require('dotenv').config()
 const router = require('express').Router()
 const tokenVerifier = require('./../helpers/tokenVerifier')
 const votesRepository = require('./../repository/mysql-votes')
+const votesSchema = require('./../schemas/votesSchema')
 
 
 
 router.post('/idVotedUser/votes',tokenVerifier, async (req, res) => {
     const {idSeller, vote} = req.body
+    const infoUser = req.user.user
+    const userId = Number(infoUser.id)
 
-    if (!idSeller || !vote) {
+    try {
+        await votesSchema.validateAsync({vote: vote.toString()})
+    } catch (error) {
+         res.status(404)
+         res.end(error.message)
+         return
+    }
+
+    if (!idSeller) {
         res.status(404)
         res.end('incomplete body')
         return
-      }
+    }
+
+    if (idSeller === userId) {
+        res.status(404)
+        res.end('idSeller === userId')
+        return
+    }
 
     let newVote
     try {

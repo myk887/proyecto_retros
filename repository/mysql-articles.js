@@ -116,20 +116,39 @@ const getArticleSold = async ({userId}) => {
 
 
 const postArticleSold = async ({userId, articleId}) => {
+    const [[{idUser, buyerId}]] = await  connection.query('select idUser, buyerId  from articles WHERE id = ?', [articleId])
+
+    if(buyerId) return 2
+    if((idUser*1) === (userId*1)) return 3
+
     const articles = await connection.query('UPDATE articles SET buyerId = ? WHERE id = ?', [userId, articleId])
 
-    if (!articles[0]) return false
+    if (!articles[0].affectedRows) return false
 
     return articles[0]
 }
 
-// const postArticlePhoto = async ({articlePhoto, idArticle}) => {
-//     const articles = await connection.query('UPDATE articles SET photo = ? WHERE id = ?', [articlePhoto, idArticle])
+const reducer = (acumulador, media) => {
+  console.log(acumulador,'++', media, '***********')
+  return (acumulador + media)
+}
 
-//     if (!articles[0]) return false
+const getArticlesById = async ({idArticle}) => {
+  const [[articles]] = await  connection.query('select * from articles WHERE id = ?', [idArticle])
 
-//     return articles[0]
-// }
+  const [votes]= await  connection.query('select vote from user_votes WHERE idVotedUser = ?', [articles.idUser])
+
+  let allVotes = []
+  votes.forEach(v => allVotes.push(v.vote))
+
+  const [averageVotes] = ['media'].map(v => {return {avarage: (allVotes.reduce(reducer)/allVotes.length)}})
+  console.log(averageVotes)
+
+  if (!articles) return false
+
+  return {...articles, userAverageVotes: averageVotes.avarage}
+}
+
 
 
 module.exports = {
@@ -142,7 +161,8 @@ module.exports = {
     getArticleOnSales,
     getArticlesPurchased,
     getArticleSold,
-    postArticleSold
+    postArticleSold,
+    getArticlesById
 }
 
 

@@ -22,6 +22,7 @@ const entryShema = Joi.object({
             'string.max': '[description] should be between 10 and 500 characters'
     }),
     category: Joi.string()
+        .valid('moviles','fijos','cintas','vinilos','accesorios','monitores','ordenadores','teclados','camaraFotos','camaraVideos','televisores','cartuchos','consolas','cables','despertadores','gps','librosElectronicos', 'maquinasEscribir', 'tdt', 'altavoces', 'mp3', 'radios', 'tocadiscos', 'walkman')
         .required()
         .min(3)
         .max(500)

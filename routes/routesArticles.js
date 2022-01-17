@@ -184,8 +184,18 @@ router.post('/sold', tokenVerifier,  async (req, res) => {
       res.end('User not found')
       return
     }
+    if (articles === 2) {
+      res.status(404)
+      res.end('Sold article')
+      return
+    }
+    if (articles === 3) {
+      res.status(404)
+      res.end('BuyerId === idUser')
+      return
+    }
     res.status(200)
-    res.send(articles)
+    res.send(articles.info)
 
   } catch (error) {
         res.status(500)
@@ -259,6 +269,27 @@ router.get('/sold', tokenVerifier, async (req, res) => {
     res.end(error.message)
     return
   }
+})
+
+router.get('/:idArticle', async (req, res) => {
+  const idArticle = req.params.idArticle
+
+try {
+  const articles = await articleRepository.getArticlesById({ idArticle })
+
+  if (!articles) {
+    res.status(404)
+    res.end('Articles not found')
+    return
+  }
+  res.status(200)
+  res.send(articles)
+
+} catch (error) {
+  res.status(500)
+  res.end(error.message)
+  return
+}
 })
 
 
