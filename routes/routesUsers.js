@@ -116,7 +116,7 @@ router.post('/login', async (req, res) => {
     }
     if (!newUser) {
         res.status(401)
-        res.end('ERROR, please verify email')
+        res.end('ERROR, please verify email, the introduced one does')
         return
     }
     if (!newUser.active) {
@@ -298,6 +298,17 @@ router.delete('/profile', tokenVerifier, async (req, res) => {
 router.get('/profile',tokenVerifier, async (req, res) => {
     const infoUser = req.user.user
     const user = await usersRepository.getUserById(infoUser.id)
+    if (!user) {
+        res.status(404)
+        res.end('Users not found')
+        return
+    }
+    res.status(200)
+    res.send(user)
+})
+router.get('/name/:id', async (req, res) => {
+    const id = req.params.id
+    const user = await usersRepository.getUsersName({id})
     if (!user) {
         res.status(404)
         res.end('Users not found')

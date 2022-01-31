@@ -129,7 +129,6 @@ const postArticleSold = async ({userId, articleId}) => {
 }
 
 const reducer = (acumulador, media) => {
-  console.log(acumulador,'++', media, '***********')
   return (acumulador + media)
 }
 
@@ -141,8 +140,7 @@ const getArticlesById = async ({idArticle}) => {
   let allVotes = []
   votes.forEach(v => allVotes.push(v.vote))
 
-  const [averageVotes] = ['media'].map(v => {return {avarage: (allVotes.reduce(reducer)/allVotes.length)}})
-  console.log(averageVotes)
+  const [averageVotes] = ['media'].map(v => {return {avarage: allVotes.length ? (allVotes.reduce(reducer)/allVotes.length) : 0}})
 
   if (!articles) return false
 

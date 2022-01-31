@@ -3,10 +3,10 @@ const connection = require('./../repository/mysqlConnection')
 const encryptPassword = require('./../helpers/encryptPassword')
 const passwordVerifier = require('./../helpers/passwordVerifier')
 
-const getUsers = async () => {
+const getUsersName = async ({id}) => {
 
-        const users = await connection.query('select * from users')
-        return users[0]
+        const user = await connection.query('select username, location, id from users where id = ?', [id])
+        return user[0]
 
 }
 
@@ -32,12 +32,12 @@ const postUsers = async (user) => {
 const postLogin = async (user) => {
     const [users] = await  connection.query('select id, active, password from users where email = ?', [user.email])
 
-    const active = users[0].active
-    const mysqlPassword = users[0].password
-    const userId = users[0].id
+    const active = users[0] ? users[0].active : null
+    const mysqlPassword = users[0] ? users[0].password : null
+    const userId = users[0] ? users[0].id : null
 
 
-    return {mysqlPassword, userId, active}
+    return users[0] ? {mysqlPassword, userId, active} : null
 }
 
 const getUserByRegistrationCode = async (code) => {
@@ -119,7 +119,7 @@ const getRecover = async ({email, code, newPassword}) => {
 // }
 
 module.exports = {
-    getUsers,
+    getUsersName,
     getUserById,
     postUsers,
     postLogin,
