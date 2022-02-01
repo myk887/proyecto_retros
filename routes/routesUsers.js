@@ -22,12 +22,16 @@ app.use('/uploads', express.static('uploads'))
 
 router.post('/',  async (req, res) => {
     let newAvatar
-    try {
-        newAvatar = await storageAvatarUser(req.files.avatar)
-    } catch (error) {
-        res.status(500)
-        res.end(error.message)
-        return
+    if (req.files) {
+        try {
+            newAvatar = await storageAvatarUser(req.files.avatar)
+        } catch (error) {
+            res.status(500)
+            res.end(error.message)
+            return
+        }
+    } else {
+        newAvatar = './uploads/notAvatar.png'
     }
 
     const userIncomplete = JSON.parse(req.body.user)
