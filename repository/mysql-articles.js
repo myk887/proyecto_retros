@@ -8,9 +8,7 @@ const searchArticlesByName = async ({search = ''}) => {
 }
 
 const getArticlesBySubcategory = async ({search = '', category}) => {
-
     const articles = await connection.query("select * from articles WHERE name like ? AND category = ?", [`%${search}%`, category])
-
     return articles[0]
 }
 
