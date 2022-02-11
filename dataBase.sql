@@ -1,6 +1,7 @@
 CREATE SCHEMA `productos_retro`;
+USE productos_retro;
 
-CREATE TABLE productos_retro.users (
+CREATE TABLE users (
   id INT PRIMARY KEY AUTO_INCREMENT,
   email VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(100) NOT NULL,
@@ -30,7 +31,7 @@ INSERT INTO users (`email`,`password`,`username`,`avatar`,`createdAt`,`location`
 
 
 
-CREATE TABLE productos_retro.articles (
+CREATE TABLE articles (
   id INT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(100) NOT NULL,
   price DECIMAL(60,2) NOT NULL,
@@ -221,7 +222,7 @@ INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`
 
 
 
-CREATE TABLE productos_retro.user_votes (
+CREATE TABLE user_votes (
   id INT PRIMARY KEY AUTO_INCREMENT,
   vote TINYINT NOT NULL,
   idVotedUser INT NOT NULL,
