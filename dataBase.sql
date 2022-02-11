@@ -125,7 +125,7 @@ INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`
 -- tocadiscos
 INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`buyerId`,`createdAt`) VALUES
 
-("Philips Estereo 400",70,"Antiguo tocadiscos Philips Stereo modelo 400 totalmente funcional.","./uploads/articlePhotoUploads/audio/tocadiscos/Philips_400.jpg","tocadiscos",4,NULL,"2022/01/04"),
+("Philips Estereo 400",70,"Antiguo tocadiscos Philips Stereo modelo 400 totalmente funcional.","./uploads/articlePhotoUploads/audio/tocadiscos/philips_400.jpg","tocadiscos",4,NULL,"2022/01/04"),
 ("Telefunken Musikus 105V",80,"Antiguo tocadiscos gramófono Musikus 105v. Funciona.","./uploads/articlePhotoUploads/audio/tocadiscos/telefunken_musikus_105v.jpg","tocadiscos",5,NULL,"2022/01/05"),
 ("Teppaz BI BALAD",99,"Antiguo tocadiscos portátil de 1967. Funciona. Excelente estado.","./uploads/articlePhotoUploads/audio/tocadiscos/teppaz_bi_balad.jpg","tocadiscos",6,NULL,"2022/01/06");
 
