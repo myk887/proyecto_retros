@@ -44,7 +44,6 @@ CREATE TABLE articles (
   createdAt DATETIME NOT NULL,
   modifiedAt DATETIME
 );
-camara
 
 INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`buyerId`,`createdAt`) VALUES
 
@@ -226,6 +225,6 @@ CREATE TABLE user_votes (
   id INT PRIMARY KEY AUTO_INCREMENT,
   vote TINYINT NOT NULL,
   idVotedUser INT NOT NULL,
-  FOREIGN KEY (idUserVotado) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (idVotedUser) REFERENCES users(id) ON DELETE CASCADE,
   createdAt DATETIME NOT NULL
 );
