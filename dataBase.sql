@@ -97,9 +97,9 @@ INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`
 -- monitores
 INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`buyerId`,`createdAt`) VALUES
 
-("NEC Multisync V250",40,"Funciona perfectamente. Monitor de 15pulgadas","./uploads/articlePhotoUploads/informatica/monitores/nec_multisync_v250.jpg","monitores",2,NULL,"2022/01/02"),
-("Philips 107 T5",50,"Monitor de 17 pulgadas. Funciona perfectamente. Con cable de alimentacion","./uploads/articlePhotoUploads/informatica/monitores/philips_1076_t5.jpg","monitores",3,NULL,"2022/01/03"),
-("Samsung SyncMaster 753S",44,"Monitor de 17 pulgadas. Funcionando","./uploads/articlePhotoUploads/informatica/monitores/samsung_syncmaster_753S.jpg","monitores",4,NULL,"2022/01/04");
+("NEC Multisync V250",40,"Funciona perfectamente. Monitor de 15pulgadas","./uploads/articlePhotoUploads/informatica/monitores/nec_multisync_v520.jpg","monitores",2,NULL,"2022/01/02"),
+("Philips 107 T5",50,"Monitor de 17 pulgadas. Funciona perfectamente. Con cable de alimentacion","./uploads/articlePhotoUploads/informatica/monitores/philips_107_t5.jpg","monitores",3,NULL,"2022/01/03"),
+("Samsung SyncMaster 753S",44,"Monitor de 17 pulgadas. Funcionando","./uploads/articlePhotoUploads/informatica/monitores/samsung_syncmaster_753s.jpg","monitores",4,NULL,"2022/01/04");
 
 -- camaraFotos
 INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`buyerId`,`createdAt`) VALUES
@@ -120,7 +120,7 @@ INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`
 
 ("Grundig GT 1401",60,"Totalmente funcionando. Se entrega con mando original","./uploads/articlePhotoUploads/imagen/televisores/grundig_gt_1401.jpg","televisores",3,NULL,"2022/01/03"),
 ("Telefunken 1200 S",99,"Funcionando. Le falta la antena telescopica","./uploads/articlePhotoUploads/imagen/televisores/telefunken_1200_s.jpg","televisores",4,NULL,"2022/01/04"),
-("Hitachi i-89-311",47,"Tv portátil años 70. Con cable alimentación original. No funciona.","./uploads/articlePhotoUploads/imagen/televisores/hitachi_i-89_311-jpg","televisores",5,NULL,"2022/01/05");
+("Hitachi i-89-311",47,"Tv portátil años 70. Con cable alimentación original. No funciona.","./uploads/articlePhotoUploads/imagen/televisores/hitachi_i-89_311.jpg","televisores",5,NULL,"2022/01/05");
 
 -- tocadiscos
 INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`buyerId`,`createdAt`) VALUES
@@ -157,19 +157,19 @@ INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`
 ("Apple Ipod Shuffle 2",21,"Muy buen estado. Capacidad 1Gb. Con cargador original","./uploads/articlePhotoUploads/audio/mp3/ipod_shuffle_2.jpg","mp3",9,NULL,"2022/01/09"),
 ("Victure M3",10,"Buen estado. Funciona perfectamente. Se vende el reproductor y cable usb-A","./uploads/articlePhotoUploads/audio/mp3/victure_m3.jpg","mp3",10,NULL,"2022/01/10");
 
--- moviles"
+-- moviles
 INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`buyerId`,`createdAt`) VALUES
 
 ("Móvil Ericsson A1018S",20,"Antiguo teléfono móvil vintage Ericsson A1018S + SIM","./uploads/articlePhotoUploads/telefonos/moviles/ericsson_a1018s.jpg","moviles",4,NULL,"2022/01/04"),
-("iPhone PRIMERA GENERACIÓN",2050,"El primer iPhone 8gb 2G IOS3 de 2007. Excelente estado. Caja+Accesocios+Manuales.Funciona.","./uploads/articlePhotoUploads/telefonos/moviles/iphone_1stGeneration.jpg","moviles",5,NULL,"2022/01/05"),
+("iPhone PRIMERA GENERACIÓN",2050,"El primer iPhone 8gb 2G IOS3 de 2007. Excelente estado. Caja+Accesocios+Manuales.Funciona.","./uploads/articlePhotoUploads/telefonos/moviles/iphone_1stgeneration.jpg","moviles",5,NULL,"2022/01/05"),
 ("Nokia 5110",45,"El Nokia irrompible. Nokia 5110. Usado - funcionando.","./uploads/articlePhotoUploads/telefonos/moviles/nokia_5110.jpg","moviles",6,NULL,"2022/01/06");
 
 -- fijos
 INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`buyerId`,`createdAt`) VALUES
 
-("Teléfono fijo Alcatel botones",16,"Teléfono Alcatel Teide Vintage blanco. Años 80-90. Funciona.","./uploads/articlePhotoUploads/telefonos/fijos/telefono_alcatel_teide.jpg","fijos",6,NULL,"2022/01/06"),
-("Teléfono de disco rojo",50,"Teléfono vintaje rojo, de disco. Totalmente original,de serie. Funciona","t./uploads/articlePhotoUploads/telefonos/fijos/elefono_disco_rojo.jpg","fijos",7,NULL,"2022/01/07"),
-("Teléfono góndola rojo",25,"Teléfonos góndola. Rojos. Funcionan. Uno por 25€, dos por 45 €.","./uploads/articlePhotoUploads/telefonos/fijos/telefono_gondola_rojo.jpg","fijos",8,NULL,"2022/01/08");
+("Teléfono fijo Alcatel botones",16,"Teléfono Alcatel Teide Vintage blanco. Años 80-90. Funciona.","./uploads/articlePhotoUploads/telefonos/fijos/alcatel_teide.jpg","fijos",6,NULL,"2022/01/06"),
+("Teléfono de disco rojo",50,"Teléfono vintaje rojo, de disco. Totalmente original,de serie. Funciona","./uploads/articlePhotoUploads/telefonos/fijos/disco_rojo.jpg","fijos",7,NULL,"2022/01/07"),
+("Teléfono góndola rojo",25,"Teléfonos góndola. Rojos. Funcionan. Uno por 25€, dos por 45 €.","./uploads/articlePhotoUploads/telefonos/fijos/gondola_rojo.jpg","fijos",8,NULL,"2022/01/08");
 
 -- despertadores
 INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`buyerId`,`createdAt`) VALUES
@@ -183,12 +183,12 @@ INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`
 
 ("Tomtom Go 4",20,"Funciona perfectamente. Le falta la ventosa.","./uploads/articlePhotoUploads/electronica/gps/tomtom_go_4.jpg","gps",7,NULL,"2022/01/07"),
 ("Garmin Nuvi 40",35,"Se entrega con soporte ventosa, cargador mechero y tarjeta MicroSD con mapas.","./uploads/articlePhotoUploads/electronica/gps/garmin_nuvi_40.jpg","gps",8,NULL,"2022/01/08"),
-("Tomtom Start 2",26,"Funciona perfecto y lleva instalado mapa de Iberia actual.","./uploads/articlePhotoUploads/electronica/gps/tomtom_start_2.jpg","gps",9,NULL,"2022/01/09");
+("Tomtom Start 2",26,"Funciona perfecto y lleva instalado mapa de Iberia actual.","./uploads/articlePhotoUploads/electronica/gps/tomtom_start_2.png","gps",9,NULL,"2022/01/09");
 
 -- maquinasEscribir
 INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`buyerId`,`createdAt`) VALUES
 
-("Casio casiowrite CW-17",20,"Máquina de escribir eléctrica. Buen estado exterior. No está probada.","./uploads/articlePhotoUploads/electronica/maquinas_escribir/casio_casiowrite_cw17.jpg","maquinasEscribir",10,NULL,"2022/01/10"),
+("Casio casiowrite CW-17",20,"Máquina de escribir eléctrica. Buen estado exterior. No está probada.","./uploads/articlePhotoUploads/electronica/maquinas_escribir/casio_casiowriter_cw17.jpg","maquinasEscribir",10,NULL,"2022/01/10"),
 ("Olivetti Lettera 3",49,"Bonita máquina de escribir super retro.Necesita reparación.","./uploads/articlePhotoUploads/electronica/maquinas_escribir/olivetti_lettera_3.jpg","maquinasEscribir",1,NULL,"2022/01/01"),
 ("Canon S80",120,"Con pantalla digital y estuche de transporte original. Fabricada en 1989.","./uploads/articlePhotoUploads/electronica/maquinas_escribir/canon_s80.jpg","maquinasEscribir",2,NULL,"2022/01/02");
 
@@ -220,27 +220,31 @@ INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`
 ("Megadeth. Hanhar 18",10,"Casette single. Como nueva","./uploads/articlePhotoUploads/musica/cintas/hangar_18.jpg","cintas",1,NULL,"2022/01/01"),
 ("Mecano. Entre el cielo y el suelo",20,"Usada pero en muuy buen estado","./uploads/articlePhotoUploads/musica/cintas/mecano_cielo_suelo.jpg","cintas",2,NULL,"2022/01/02");
 
+-- televisores
 INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`buyerId`,`createdAt`) VALUES
 
 ("Grundig GT 1401",60,"Totalmente funcionando. 14, Se entrega con mando original","./uploads/articlePhotoUploads/imagen/televisores/grundig_gt_1401.jpg","televisores",3,NULL,"2022/01/03"),
 ("Telefunken 1200 S",99,"Funcionando. Le falta la antena telescopica","./uploads/articlePhotoUploads/imagen/televisores/telefunken_1200_s.jpg","televisores",4,NULL,"2022/01/04"),
-("Hitachi i-89-311",47,"Tv portátil años 70. Con cable alimentación original. No funciona.","./uploads/articlePhotoUploads/imagen/tetelefunken_1200_slevisores/hitachi_i-89_311-jpg","televisores",5,NULL,"2022/01/05");
+("Hitachi i-89-311",47,"Tv portátil años 70. Con cable alimentación original. No funciona.","./uploads/articlePhotoUploads/imagen/televisores/hitachi_i-89_311.jpg","televisores",5,NULL,"2022/01/05");
 
+-- maquinasEscribir
 INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`buyerId`,`createdAt`) VALUES
 
-("Casio casiowrite CW-17",20,"Máquina de escribir eléctrica. Buen estado exterior. No está probada.","./uploads/articlePhotoUploads/electronica/maquinas_escribir/casio_casiowrite_cw17.jpg","maquinasEscribir",10,NULL,"2022/01/10"),
+("Casio casiowrite CW-17",20,"Máquina de escribir eléctrica. Buen estado exterior. No está probada.","./uploads/articlePhotoUploads/electronica/maquinas_escribir/casio_casiowriter_cw17.jpg","maquinasEscribir",10,NULL,"2022/01/10"),
 ("Olivetti Lettera 3",49,"Bonita máquina de escribir super retro.Necesita reparación.","./uploads/articlePhotoUploads/electronica/maquinas_escribir/olivetti_lettera_3.jpg","maquinasEscribir",1,NULL,"2022/01/01"),
 ("Canon S80",120,"Con pantalla digita/librosElectronicosl y estuche de transporte original. Fabricada en 1989.","./uploads/articlePhotoUploads/electronica/maquinas_escribir/canon_s80.jpg","maquinasEscribir",2,NULL,"2022/01/02");
 
+-- librosElectronicos
 INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`buyerId`,`createdAt`) VALUES
 
 ("ereader cyberbook",44,"En perfecto estado para disfrute completo. Pantalla color.","./uploads/articlePhotoUploads/electronica/libros_electronicos/ereader_cyberbook.jpg","librosElectronicos",3,NULL,"2022/01/03"),
 ("Sony DD350",55,"Averiado. No se enciende.","./uploads/articlePhotoUploads/electronica/libros_electronicos/sony_dd350.jpg","librosElectronicos",4,NULL,"2022/01/04"),
 ("Sony DD10BZ",35,"Se entrega sin batería. Funciona bien.","./uploads/articlePhotoUploads/electronica/libros_electronicos/sony_dd10bz.jpg","librosElectronicos",5,NULL,"2022/01/05");
 
+-- tdt
 INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`buyerId`,`createdAt`) VALUES
 
-("Boston DTT-3630",15,"Funciona correctamente. No tiene mando a distancia pero funciona con uno universal","./uploads/articlePhotoUploads/electronica/tdt/boston_dtt-3360.jpg","tdt",9,NULL,"2022/01/09"),
+("Boston DTT-3630",15,"Funciona correctamente. No tiene mando a distancia pero funciona con uno universal","./uploads/articlePhotoUploads/electronica/tdt/boston_dtt-3630.jpg","tdt",9,NULL,"2022/01/09"),
 ("Axil RT200",35,"Combo dvd+tdt con mando a distancia y cable euroconector","./uploads/articlePhotoUploads/electronica/tdt/axil_rt200.jpg","tdt",10,NULL,"2022/01/10"),
 ("NPG DTR 126",16,"En muy buen estado. Con caja, mando y manuales","./uploads/articlePhotoUploads/electronica/tdt/npg_dtr_126.jpg","tdt",1,NULL,"2022/01/01");
 
