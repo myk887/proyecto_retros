@@ -152,6 +152,7 @@ router.post('/login', async (req, res) => {
 
 router.put('/editUser',tokenVerifier, async (req, res) => {
     let newAvatar
+    console.log(req.files)
     if (!!req.files) {
      try {
         newAvatar = await storageAvatarUser(req.files.avatar)
@@ -184,7 +185,7 @@ router.put('/editUser',tokenVerifier, async (req, res) => {
 })
 
 router.patch('/change/password',tokenVerifier, async (req, res) => {
-    const {currentPassword, passwordNew} = req.body
+    const {currentPassword, passwordNew} = JSON.parse(req.body.pass)
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
     const passwordToChange = await encryptPassword(passwordNew)
@@ -205,7 +206,7 @@ router.patch('/change/password',tokenVerifier, async (req, res) => {
 
     let newUser
     try {
-            newUser = await usersRepository.editPatch ({id: userId, currentPassword, passwordToChange })
+            newUser = await usersRepository.editPatch({id: userId, currentPassword, passwordToChange })
     } catch (error) {
         res.status(500)
         res.end(error.message)

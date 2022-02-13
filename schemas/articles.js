@@ -27,6 +27,12 @@ const entryShema = Joi.object({
             'string.entry': '[location] is required',
             'any.required': '[location] is required'
     }),
+    province: Joi.string()
+        .required()
+        .messages({
+            'string.entry': '[province] is required',
+            'any.required': '[province] is required'
+    }),
     category: Joi.string()
         .valid('moviles','fijos','cintas','vinilos','accesorios','monitores','ordenadores','teclados','camaraFotos','camaraVideos','televisores','cartuchos','consolas','cables','despertadores','gps','librosElectronicos', 'maquinasEscribir', 'tdt', 'altavoces', 'mp3', 'radios', 'tocadiscos', 'walkman')
         .required()

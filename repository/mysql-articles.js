@@ -52,7 +52,7 @@ const getArticlesByCategory = async ({search = '', category}) => {
 }
 
 const postArticle = async ({article, idUser}) => {
-        const articles = await connection.query('INSERT INTO articles SET ?', {name: article.name, price: article.price, description: article.description, location: article.location, photo: article.photo, category: article.category, idUser: idUser, createdAt: new Date(), modifiedAt: null})
+        const articles = await connection.query('INSERT INTO articles SET ?', {name: article.name, price: article.price, description: article.description, location: article.location, province: article.province, photo: article.photo, category: article.category, idUser: idUser, createdAt: new Date(), modifiedAt: null})
         return articles[0]
 
 }

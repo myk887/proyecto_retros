@@ -22,11 +22,11 @@ const getUserById = async (idUser) => {
 const postUsers = async (user) => {
     let result
 
-        [result] = await connection.query('INSERT INTO users SET ?', {email: user.email, password: user.password, username: user.username, location: user.location ,avatar: user.avatar, active: false, deleted: false, registrationCode: user.registrationCode, recoverCode: null, createdAt: new Date(), modifiedAt: new Date()})
+        [result] = await connection.query('INSERT INTO users SET ?', {email: user.email, password: user.password, username: user.username, location: user.location, province: user.province ,avatar: user.avatar, active: false, deleted: false, registrationCode: user.registrationCode, recoverCode: null, createdAt: new Date(), modifiedAt: new Date()})
 
     if (!result.affectedRows) return false
 
-    return {id: result.insertId, username: user.username, email: user.email, location: user.location, avatar: user.avatar}
+    return {id: result.insertId, username: user.username, email: user.email, location: user.location, province: user.province, avatar: user.avatar}
 }
 
 const postLogin = async (user) => {
@@ -62,6 +62,8 @@ const editUser = async ({user, id}) => {
       if (user.password) {result = await connection.query('UPDATE users SET password = ? WHERE id = ?', [await encryptPassword(user.password), id])}
 
       if (user.location) {result = await connection.query('UPDATE users SET location = ? WHERE id = ?', [user.location, id])}
+
+      if (user.province) {result = await connection.query('UPDATE users SET province = ? WHERE id = ?', [user.province, id])}
 
       if (user.avatar) {result = await connection.query('UPDATE users SET avatar = ? WHERE id = ?', [user.avatar, id])}
 

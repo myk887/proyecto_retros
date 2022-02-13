@@ -39,6 +39,7 @@ CREATE TABLE articles (
   photo VARCHAR(250),
   category VARCHAR(200) NOT NULL,
   location VARCHAR(200) NOT NULL,
+  province VARCHAR(200) NOT NULL,
   idUser INT NOT NULL,
   FOREIGN KEY (idUser) REFERENCES users(id),
   buyerId INT DEFAULT NULL,
