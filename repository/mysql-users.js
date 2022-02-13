@@ -5,7 +5,7 @@ const passwordVerifier = require('./../helpers/passwordVerifier')
 
 const getUsersName = async ({id}) => {
 
-        const user = await connection.query('select username, location, id from users where id = ?', [id])
+        const user = await connection.query('select username, location, province, id from users where id = ?', [id])
         return user[0]
 
 }
