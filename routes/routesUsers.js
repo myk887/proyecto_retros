@@ -185,7 +185,7 @@ router.put('/editUser',tokenVerifier, async (req, res) => {
 })
 
 router.patch('/change/password',tokenVerifier, async (req, res) => {
-    const {currentPassword, passwordNew} = JSON.parse(req.body.pass)
+    const {currentPassword, passwordNew} = req.body
     const infoUser = req.user.user
     const userId = Number(infoUser.id)
     const passwordToChange = await encryptPassword(passwordNew)
