@@ -199,7 +199,7 @@ INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`
 INSERT INTO articles (`name`,`price`,`description`,`photo`,`category`,`idUser`,`buyerId`,`createdAt`, `location`, `province`) VALUES
 
 ("ereader cyberbook",44,"En perfecto estado para disfrute completo. Pantalla color.","./uploads/articlePhotoUploads/electronica/libros_electronicos/ereader_cyberbook.jpg","librosElectronicos",3,NULL,"2022/01/03","Lugo", "madrid"),
-("Sony DD350",55,"Averiado. No se enciende.","sony_dd350.jpg","./uploads/articlePhotoUploads/electronica/libros_electronicos/librosElectronicos",4,NULL,"2022/01/04","Ourense", "almeria"),
+("Sony DD350",55,"Averiado. No se enciende.","sony_dd350.jpg","./uploads/articlePhotoUploads/electronica/libros_electronicos/librosElectronicos/sony_dd350.jpg",4,NULL,"2022/01/04","Ourense", "almeria"),
 ("Sony DD10BZ",35,"Se entrega sin batería. Funciona bien.","./uploads/articlePhotoUploads/electronica/libros_electronicos/sony_dd10bz.jpg","librosElectronicos",5,NULL,"2022/01/05","Pontevedra", "sevilla");
 
 -- cables
@@ -258,5 +258,17 @@ CREATE TABLE user_votes (
   vote TINYINT NOT NULL,
   idVotedUser INT NOT NULL,
   FOREIGN KEY (idVotedUser) REFERENCES users(id) ON DELETE CASCADE,
+  createdAt DATETIME NOT NULL
+);
+
+CREATE TABLE trading_user (
+  idArtilce INT PRIMARY KEY,
+  FOREIGN KEY (idArtilce) REFERENCES articles(id),
+  buy TINYINT DEFAULT NULL,
+  sellerId INT NOT NULL,
+  FOREIGN KEY (sellerId) REFERENCES users(id),
+  buyerId INT NOT NULL,
+  FOREIGN KEY (buyerId) REFERENCES users(id),articles
+  saleDate DATETIME DEFAULT NULL,
   createdAt DATETIME NOT NULL
 );

@@ -2,7 +2,7 @@ require('dotenv').config()
 const fileUpload = require('express-fileupload')
 const express = require('express')
 const {PORT, BASE_URL} = process.env
-const {routesArticles, routesUsers, routesVotes} = require('./routes')
+const {routesArticles, routesUsers, routesVotes, routesTrading} = require('./routes')
 const cors = require('cors')
 
 const app = express()
@@ -21,6 +21,7 @@ app.use('/articles', routesArticles)
 
 app.use('/votes', routesVotes)
 
+app.use('/trading', routesTrading)
 
 
 app.listen(PORT, () => {
