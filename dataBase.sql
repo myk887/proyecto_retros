@@ -19,7 +19,7 @@ CREATE TABLE users (
 
 
 INSERT INTO users (`email`,`password`,`username`,`avatar`,`createdAt`,`location`, `province`, `active`) VALUES
-("AndrewHebert@gmail.com","$2b$10$SqBYg1EUu5B5lagQ8Sk6p.47HkqR5YqwIW496STymEAGzRSFYrwjS","AndrewHebert","./uploads/userAvatarUploads/AndrewHebert-avatar.jpg","2022/01/01","Pontevedra", "almeria", "1"),
+("AndrewHebert@gmail.com","$2b$10$SqBYg1EUu5B5lagQ8Sk6p.47HkqR5YqwIW496STymEAGzRSFYrwjS","AndrewHebert","./uploads/userAvatarUploads/AndrewHerbert-avatar.jpg","2022/01/01","Pontevedra", "almeria", "1"),
 ("IngridScott@gmail.com","$2b$10$SqBYg1EUu5B5lagQ8Sk6p.47HkqR5YqwIW496STymEAGzRSFYrwjS","IngridScott","./uploads/userAvatarUploads/IngridScott-avatar.jpg","2022/01/02","Coruña", "barcelona", "1"),
 ("JackTownsend@gmail.com","$2b$10$SqBYg1EUu5B5lagQ8Sk6p.47HkqR5YqwIW496STymEAGzRSFYrwjS","JackTownsen","./uploads/userAvatarUploads/JackTownsen-avatar.jpg","2022/01/03","Lugo", "madrid", "1"),
 ("LeonardSilva@gmail.com","$2b$10$SqBYg1EUu5B5lagQ8Sk6p.47HkqR5YqwIW496STymEAGzRSFYrwjS","LeonardSilva","./uploads/userAvatarUploads/LeonardSilva-avatar.jpg","2022/01/04","Ourense", "almeria", "1"),
