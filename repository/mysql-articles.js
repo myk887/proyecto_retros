@@ -2,51 +2,51 @@ const connection = require('./mysqlConnection')
 
 const searchArticlesByName = async ({search = ''}) => {
 
-        const articles = await connection.query("select * from articles WHERE name like ? ", [`%${search}%`])
+        const articles = await connection.query("select * from articles WHERE name like ? AND buyerId is NULL", [`%${search}%`])
 
         return articles[0]
 }
 
 const getArticlesBySubcategory = async ({search = '', category}) => {
-    const articles = await connection.query("select * from articles WHERE name like ? AND category = ?", [`%${search}%`, category])
+    const articles = await connection.query("select * from articles WHERE name like ? AND category = ? AND buyerId is NULL", [`%${search}%`, category])
     return articles[0]
 }
 
 const getArticlesByCategory = async ({search = '', category}) => {
 // AUDIO
   if(category === 'audio') {
-    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ? OR category = ? OR category = ? OR category = ?)", [`%${search}%`, 'altavoces', 'mp3', 'radios', 'tocadiscos', 'walkman'])
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ? OR category = ? OR category = ? OR category = ?) AND buyerId is NULL", [`%${search}%`, 'altavoces', 'mp3', 'radios', 'tocadiscos', 'walkman'])
     return articles[0]
   }
   // ELECTRONICA
   if(category === 'electronica') {
-    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ? OR category = ? OR category = ? OR category = ? OR category = ?)", [`%${search}%`, 'cables', 'despertadores', 'gps', 'librosElectronicos', 'maquinasEscribir', 'tdt'])
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ? OR category = ? OR category = ? OR category = ? OR category = ?) AND buyerId is NULL", [`%${search}%`, 'cables', 'despertadores', 'gps', 'librosElectronicos', 'maquinasEscribir', 'tdt'])
     return articles[0]
   }
   // GAMING
   if(category === 'gaming') {
-    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ?)", [`%${search}%`, 'cartuchos', 'consolas'])
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ?) AND buyerId is NULL", [`%${search}%`, 'cartuchos', 'consolas'])
     return articles[0]
   }
   // IMAGEN
   if(category === 'imagen') {
-    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ? OR category = ?)", [`%${search}%`, 'camaraFotos', 'camaraVideo', 'televisores'])
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ? OR category = ?) AND buyerId is NULL", [`%${search}%`, 'camaraFotos', 'camaraVideo', 'televisores'])
     return articles[0]
   }
   // INFORMATICA
   if(category === 'informatica') {
-    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ? OR category = ? OR category = ?)", [`%${search}%`, 'accesorios', 'monitores', 'ordenadores', 'teclados'])
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ? OR category = ? OR category = ?) AND buyerId is NULL", [`%${search}%`, 'accesorios', 'monitores', 'ordenadores', 'teclados'])
     return articles[0]
   }
   // MUSICA
   if(category === 'musica') {
-    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ?)", [`%${search}%`, 'cintas', 'vinilos'])
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ?) AND buyerId is NULL", [`%${search}%`, 'cintas', 'vinilos'])
     return articles[0]
   }
   // TELEFONOS
   if(category === 'telefonos') {
 
-    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ?)", [`%${search}%`, 'fijos', 'moviles'])
+    const articles = await connection.query("select * from articles WHERE name like ? AND (category = ? OR category = ?) AND buyerId is NULL", [`%${search}%`, 'fijos', 'moviles'])
     return articles[0]
   }
 }

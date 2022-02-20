@@ -72,7 +72,7 @@ router.post('/userSeller',tokenVerifier, async (req, res) => {
 
     const result2 = moment(tradingInfo.saleHour, 'H:m:s', true).isValid()
 
-    if (!result) {
+   if (tradingInfo.buy) { if (!result) {
         res.status(404)
         res.end('Date incorrect')
         return
@@ -81,7 +81,7 @@ router.post('/userSeller',tokenVerifier, async (req, res) => {
         res.status(404)
         res.end('Hour incorrect')
         return
-    }
+    }}
     let newTrading
     try {
         newTrading = await tradingRepository.postTradingSeller({ idBuyer, idUser: userId, articleId, tradingInfo})
