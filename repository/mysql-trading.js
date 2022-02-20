@@ -15,7 +15,7 @@ const postTradingSeller = async ({idBuyer, idUser, articleId, tradingInfo}) => {
     const [[comprobation]] = await  connection.query('select * from trading_user WHERE idArtilce = ? and sellerId = ? and buyerId = ?', [articleId, idUser, idBuyer])
     if (comprobation.sellerId === comprobation.buyerId) return
 
-    if (tradingInfo.buy === 1) {const res = await connection.query('UPDATE trading_user SET ?', {buy: tradingInfo.buy, saleDate: (tradingInfo.saleDate + ' ' + tradingInfo.saleHour), salePlace: tradingInfo.salePlace})
+    if (tradingInfo.buy === 1) {const res = await connection.query('UPDATE trading_user SET ? WHERE idArtilce = ? and sellerId = ? and buyerId = ?', [{buy: tradingInfo.buy, saleDate: (tradingInfo.saleDate + ' ' + tradingInfo.saleHour), salePlace: tradingInfo.salePlace}, articleId, idUser, idBuyer])
     return res[0].affectedRows}
 
     if (tradingInfo.buy === 0) {const res = await connection.query('UPDATE trading_user SET ?', {buy: tradingInfo.buy})
