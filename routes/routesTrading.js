@@ -144,4 +144,27 @@ router.get('/userBuyer', tokenVerifier,  async (req, res) => {
   }
 })
 
+router.post('/voted', tokenVerifier,  async (req, res) => {
+  const {idSeller, articleId} = req.body
+  const infoUser = req.user.user
+  const userId = Number(infoUser.id)
+
+try {
+  const result = await tradingRepository.postVotedBoolean({ idUser:userId, idSeller, articleId })
+
+  if (!result) {
+    res.status(404)
+    res.end('Voted boolena error')
+    return
+  }
+  res.status(200)
+  res.send('ok')
+
+} catch (error) {
+  res.status(500)
+  res.end(error.message)
+  return
+}
+})
+
 module.exports = router

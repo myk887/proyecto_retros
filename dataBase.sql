@@ -268,7 +268,8 @@ CREATE TABLE trading_user (
   sellerId INT NOT NULL,
   FOREIGN KEY (sellerId) REFERENCES users(id),
   buyerId INT NOT NULL,
-  FOREIGN KEY (buyerId) REFERENCES users(id),articles
+  FOREIGN KEY (buyerId) REFERENCES users(id),
+  voted BOOLEAN DEFAULT false,
   saleDate DATETIME DEFAULT NULL,
   createdAt DATETIME NOT NULL
 );

@@ -45,10 +45,18 @@ const getTradingSeller = async ({idUser}) => {
     }
     return [array,comprobation]
 }
+const postVotedBoolean = async ({ idUser, idSeller, articleId }) => {
+    const [[{voted}]] = await  connection.query('select voted from trading_user WHERE idArtilce = ? AND buyerId = ? AND sellerId = ?', [articleId, idUser, idSeller])
+    if (voted !== null) return
+    const res = await connection.query('UPDATE trading_user SET voted = 1 WHERE idArtilce = ? and sellerId = ? and buyerId = ?', [ articleId, idSeller, idUser])
+    console.log(res,'+++')
+    return res[0].affectedRows
+}
 
 module.exports = {
     postTrading,
     postTradingSeller,
     getTradingBuyer,
-    getTradingSeller
+    getTradingSeller,
+    postVotedBoolean
 }
