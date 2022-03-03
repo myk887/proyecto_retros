@@ -18,7 +18,7 @@ const accountConfirmationEmail = async ({ sendTo, code }) => {
     from: `${SENDER_EMAIL} <${SENDER_EMAIL}>`,
     to: sendTo,
     subject: "Confirm your account",
-    html: `<p>Click <a href="http://localhost:3000/users/validate/:${code}">here</a> to confirm your account</p>`
+    html: `<p>Click <a href="http://localhost:4000/confirmation/${code}">here</a> to confirm your account</p>`
   })
 }
 
