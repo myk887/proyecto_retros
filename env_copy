@@ -1,0 +1,18 @@
+BASE_URL=http://localhost/
+PORT=3000
+JWT_PRIVATE_KEY=ABC123abc
+
+USER1=root
+PASSWORD=root
+DATABASE=productos_retro
+HOST=localhost
+
+BCRYPT_SALT=10
+
+
+// SMTP
+SMTP_HOST=smtp.sendgrid.net
+SMTP_PORT=587
+SMTP_USER=apikey
+SMTP_PASSWORD=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
+SENDER_EMAIL=elantiswing@hotmail.com 
