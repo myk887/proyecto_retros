@@ -216,11 +216,12 @@ router.patch('/change/password',tokenVerifier, async (req, res) => {
     if (!newUser) {
         res.status(404)
         res.end('Password not changed')
+        return
     }
 
     res.status(200)
     res.end('Successfull change')
-    })
+})
 
 router.put('/reset-password', async (req, res) => {
     const {email} = req.body
