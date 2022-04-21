@@ -5,7 +5,7 @@ const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SENDER_EMAIL } = process
 let transporter = nodemailer.createTransport({
   host: SMTP_HOST,
   port: SMTP_PORT,
-  secure: false,
+  secure: true,
   auth: {
     user: SMTP_USER,
     pass: SMTP_PASSWORD,
@@ -14,6 +14,7 @@ let transporter = nodemailer.createTransport({
 
 
 const accountConfirmationEmail = async ({ sendTo, code }) => {
+  console.log(SMTP_PASSWORD, SMTP_USER)
   await transporter.sendMail({
     from: `${SENDER_EMAIL} <${SENDER_EMAIL}>`,
     to: sendTo,
