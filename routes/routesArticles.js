@@ -112,7 +112,7 @@ router.post('/', tokenVerifier, async (req, res) => {
     try {
        await articleSchema.validateAsync(article)
     } catch (error) {
-        res.status(404)
+        res.status(401)
         res.end(error.message)
         return
     }
